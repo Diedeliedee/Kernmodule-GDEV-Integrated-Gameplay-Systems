@@ -1,0 +1,47 @@
+@startuml
+
+class GameManager
+{
+  -tickManager: TickManager
+
+  +Awake() : void
+  +Start() : void
+  +Update() : void
+}
+
+class TickManager
+{
+  -subscribed : List<IUpdatable> 
+  +OnUpdate() : void
+  +Add<T>(updatable : T) : T
+}
+
+interface IUpdatable
+
+GameManager *-- TickManager
+TickManager o.. IUpdatable
+
+'Inventory System
+interface IInventory
+{
+  +Add(itemStack : params ItemStack[]) : void
+  +Remove(itemStack : params ItemStack[]) : void
+  +Contains(itemStack : params ItemStack[]) : bool
+}
+
+struct ItemStack
+{
+  type : ItemData
+  amount : int
+}
+
+class ItemData extends ScriptableObject
+{
+  +image : Sprite
+  
+}
+
+IInventory --> ItemStack
+ItemStack *-- ItemData
+
+@enduml
