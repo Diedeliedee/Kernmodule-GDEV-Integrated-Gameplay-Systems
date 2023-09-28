@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ServiceLocator
 {
+    //  Service Item Pool:
     private readonly Dictionary<Type, IService> services = new();
 
+    //  Getter:
     public static ServiceLocator Instance { get; private set; }
 
     public ServiceLocator()
@@ -18,39 +20,46 @@ public class ServiceLocator
         Instance = this;
     }
 
+    /// <summary>
+    /// Add a service to the locator, using the passed in instance to generate a Type key.
+    /// </summary>
     public void Add(IService service)
     {
-        Type type = service.GetType();
+        Type key = service.GetType();
 
-        if (services.ContainsKey(type))
+        if (services.ContainsKey(key))
         {
-            Debug.LogWarning($"Key: {type} already present in the service pool.");
+            Debug.LogWarning($"Key: {key} already present in the service pool.");
             return;
         }
-        services.Add(type, service);
+        services.Add(key, service);
     }
 
-    public void Remove(Type type)
+    /// <summary>
+    /// Remove a service from the locator, using the Type key to identify which instance should be removed.
+    /// </summary>
+    public void Remove(Type key)
     {
-        if (!services.ContainsKey(type))
+        if (!services.ContainsKey(key))
         {
-            Debug.LogWarning($"Key: {type} is not present in the service pool.");
+            Debug.LogWarning($"Key: {key} is not present in the service pool.");
             return;
         }
-        services.Remove(type);
+        services.Remove(key);
     }
 
+    /// <returns>A service attached to the locator, if an instance of the specified generic type is present.</returns>
     public T Get<T>() where T : IService
     {
-        Type type = typeof(T);
+        Type key = typeof(T);
 
-        if (services.ContainsKey(type))
+        if (services.ContainsKey(key))
         {
-            return (T)services[type];
+            return (T)services[key];
         }
         else
         {
-            Debug.LogWarning($"Key: {type} did not return a valid service.");
+            Debug.LogWarning($"Key: {key} did not return a valid service.");
             return default;
         }
     }
