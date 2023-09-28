@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ServiceLocator
 {
-    //  Service Item Pool:
-    private readonly Dictionary<AvailableService, IService> services = new Dictionary<AvailableService, IService>();
+    private readonly Dictionary<Type, IService> services = new();
 
-    //  Getter:
     public static ServiceLocator Instance { get; private set; }
 
     public ServiceLocator()
@@ -19,35 +18,40 @@ public class ServiceLocator
         Instance = this;
     }
 
-    public void Add(AvailableService key, IService service)
+    public void Add(IService service)
     {
-        if (services.ContainsKey(key))
+        Type type = service.GetType();
+
+        if (services.ContainsKey(type))
         {
-            Debug.LogWarning($"Key: {key} already present in the service pool.");
+            Debug.LogWarning($"Key: {type} already present in the service pool.");
             return;
         }
-        services.Add(key, service);
+        services.Add(type, service);
     }
 
-    public void Remove(AvailableService key)
+    public void Remove(Type type)
     {
-        if (!services.ContainsKey(key))
+        if (!services.ContainsKey(type))
         {
-            Debug.LogWarning($"Key: {key} is not present in the service pool.");
+            Debug.LogWarning($"Key: {type} is not present in the service pool.");
             return;
         }
-        services.Remove(key);
+        services.Remove(type);
     }
 
-    public IService Get(AvailableService key)
+    public T Get<T>() where T : IService
     {
-        var retrievedService = services[key];
+        Type type = typeof(T);
 
-        if (retrievedService == null)
+        if (services.ContainsKey(type))
         {
-            Debug.LogWarning($"Key: {key} did not return a valid service.");
-            return null;
+            return (T)services[type];
         }
-        return retrievedService;
+        else
+        {
+            Debug.LogWarning($"Key: {type} did not return a valid service.");
+            return default;
+        }
     }
 }

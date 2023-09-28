@@ -1,4 +1,4 @@
-public interface IInventory
+public interface IInventory : IService
 {
     /// <summary>
     /// Add a certain amount of items to the inventory of the given type.
