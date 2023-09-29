@@ -7,10 +7,12 @@ using UnityEngine;
 
 public class GridInventory : IInventory
 {
+    private readonly RectTransform transform = null;
     private readonly ItemStack[,] itemGrid = null;
 
-    public GridInventory(int _width, int _height)
+    public GridInventory(int _width, int _height, Transform _parent = null)
     {
+        transform = new GameObject("Grid Inventory", typeof(RectTransform)).GetComponent<RectTransform>();
         itemGrid = new ItemStack[_width, _height];
     }
 
