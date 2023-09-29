@@ -1,7 +1,8 @@
-﻿public struct ItemStack
+﻿[System.Serializable]
+public struct ItemStack
 {
-    public readonly ItemData Item;
-    public readonly int Amount;
+    public ItemData Item;
+    public int Amount;
 
     public ItemStack(ItemData _item, int _amount)
     {
