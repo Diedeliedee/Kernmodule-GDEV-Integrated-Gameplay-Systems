@@ -3,20 +3,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private RectTransform
+    [Header("Reference")]
+    [SerializeField] private RectTransform canvas;
 
     private readonly ServiceLocator serviceLocator = new();
-    private GridInventory inventory;
-    private TickManager tickManager;
+    private InventoryManager inventoryManager = null;
+    private TickManager tickManager = null;
 
     private void Awake()
     {
         tickManager = new TickManager();
-        inventory = new GridInventory(10, 10, transform);
+        inventoryManager = new InventoryManager(canvas);
 
         serviceLocator.Add(tickManager);
-        serviceLocator.Add(inventory);
+        serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
 
         tickManager.Add(new GatherSystem(
             new Dictionary<ItemData, GatherInfo.GatherChance>()
