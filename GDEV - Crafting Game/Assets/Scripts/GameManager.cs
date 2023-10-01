@@ -6,12 +6,14 @@ public class GameManager : MonoBehaviour
     [Header("Reference")]
     [SerializeField] private RectTransform canvas;
 
-    private readonly ServiceLocator serviceLocator = new();
+    private ServiceLocator serviceLocator = null;
     private InventoryManager inventoryManager = null;
     private TickManager tickManager = null;
 
     private void Awake()
     {
+        serviceLocator = new();
+
         tickManager = new TickManager();
         inventoryManager = new InventoryManager(canvas);
 
