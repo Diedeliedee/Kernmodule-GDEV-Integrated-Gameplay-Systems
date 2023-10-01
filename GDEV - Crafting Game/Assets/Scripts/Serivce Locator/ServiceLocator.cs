@@ -23,9 +23,11 @@ public class ServiceLocator
     /// <summary>
     /// Add a service to the locator, using the passed in instance to generate a Type key.
     /// </summary>
-    public void Add(IService service)
+    /// <param name="service">The instance to be added as service to the locator.</param>
+    /// <param name="key">Optional type key overload. GetType() doesn't return superclasses or interfaces when passing in a subclass.</param>
+    public void Add(IService service, Type key = null)
     {
-        Type key = service.GetType();
+        if (key == null) { key = service.GetType(); }
 
         if (services.ContainsKey(key))
         {
@@ -59,7 +61,7 @@ public class ServiceLocator
         }
         else
         {
-            Debug.LogWarning($"Key: {key} did not return a valid service.");
+            Debug.LogError($"Key: {key} did not return a valid service.");
             return default;
         }
     }
