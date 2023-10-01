@@ -19,7 +19,7 @@ public class InventoryManager
         var createdInventoryObject = new GameObject("Grid Inventory");
 
         transform = createdInventoryObject.AddComponent<RectTransform>();
-        transform.parent = _gridParent;
+        transform.SetParent(_gridParent, false);
 
         inventory = new GridInventory(10, 10);
 
