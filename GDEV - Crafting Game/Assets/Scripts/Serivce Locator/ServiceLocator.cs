@@ -21,12 +21,10 @@ public class ServiceLocator
     }
 
     /// <summary>
-    /// Add a service to the locator, using the passed in instance to generate a Type key.
+    /// Add a service to the locator, using the passed in Type as key.
     /// </summary>
-    public void Add(IService service)
+    public void Add(Type key, IService service)
     {
-        Type key = service.GetType();
-
         if (services.ContainsKey(key))
         {
             Debug.LogWarning($"Key: {key} already present in the service pool.");

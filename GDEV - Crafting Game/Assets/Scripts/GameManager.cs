@@ -3,13 +3,22 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private readonly ServiceLocator serviceLocator = new();
+    [Header("Crafting System")]
+    [SerializeField] private CraftingRecipe[] allAvailableRecipes;
+    [SerializeField] private GameObject recipeUIPrefab;
+    [SerializeField] private RectTransform recipeUIParent;
+    
+    private ServiceLocator serviceLocator;
     private TickManager tickManager;
+    private Inventory inventory;
 
     private void Awake()
     {
         tickManager = new TickManager();
-        serviceLocator.Add(tickManager);
+        inventory = new Inventory();
+        serviceLocator = new ServiceLocator();
+        serviceLocator.Add(typeof(IInventory), inventory);
+        serviceLocator.Add(typeof(ITickManager), tickManager);
 
         tickManager.Add(new GatherSystem(
             new Dictionary<ItemData, GatherInfo.GatherChance>()
@@ -17,6 +26,8 @@ public class GameManager : MonoBehaviour
                 // Insert Standard ItemData
             }
         ));
+
+        tickManager.Add(new CraftingSystem(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
     }
 
     private void Start()
