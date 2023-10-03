@@ -21,7 +21,7 @@ interface IUpdatable
 GameManager *-- TickManager
 TickManager o.. IUpdatable
 
-'Inventory System
+'Inventory System Base
 interface IInventory
 {
   +Add(itemStack : params ItemStack[]) : void
@@ -35,13 +35,48 @@ struct ItemStack
   amount : int
 }
 
-class ItemData extends ScriptableObject
+class ItemData
 {
   +image : Sprite
-  
 }
 
 IInventory --> ItemStack
 ItemStack *-- ItemData
+
+'Grid Inventory System
+class GridInventory extends IInventory
+{
+  -itemGrid : Tile[]
+}
+
+class Tile
+{
+  -contents : ItemStack
+  +SetContents() : void
+  +ChangeValue(amount : int) : void
+}
+
+class InventoryManager
+{
+  +inventory : GridInventory
+}
+
+class SlotElement
+{
+  -element : RectTransform
+  -connectedTile : Tile
+}
+
+GridInventory *-- Tile
+InventoryManager *-- SlotElement
+SlotElement *-- Tile
+
+'Interaction System
+class InteractionManager
+{
+  
+}
+
+InventoryManager *-- GridInventory
 
 @enduml
