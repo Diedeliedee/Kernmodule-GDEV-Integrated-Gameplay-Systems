@@ -4,15 +4,26 @@ public class GatherInfo
 {
     public Dictionary<ItemData, GatherChance> gatherItems;
 
-    public GatherInfo(Dictionary<ItemData, GatherChance> _gatherItems)
+    public GatherInfo()
     {
-        gatherItems = _gatherItems;
+        gatherItems = new Dictionary<ItemData, GatherChance>();
     }
 
-    public struct GatherChance
+    public void Decorate(GatherComponent gatherComponent)
     {
-        public float gatherChancePercentage;
-        public int maxStackSize;
+        foreach (var currentGatherItem in gatherComponent.gatherItems)
+        {
+            if (gatherItems.ContainsKey(currentGatherItem.key))
+            {
+                GatherChance gatherChance = gatherItems[currentGatherItem.key];
+                gatherChance.gatherChancePercentage += currentGatherItem.value.gatherChancePercentage;
+                gatherItems[currentGatherItem.key] = gatherChance;
+            }
+            else
+            {
+                gatherItems.Add(currentGatherItem.key, currentGatherItem.value);
+            }
+        }
     }
 }
 

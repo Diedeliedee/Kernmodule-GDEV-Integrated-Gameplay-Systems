@@ -1281,6 +1281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a874d48641d234592355ac3a830e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseGatherComponent: {fileID: 11400000, guid: dd70abc43a9f27f48a1d700c0be1d02f, type: 2}
   allAvailableRecipes:
   - {fileID: 11400000, guid: a41359f98b1fad6458c3d2833d1a2fcd, type: 2}
   recipeUIPrefab: {fileID: 2198322172647252315, guid: 2eb3facf23111a446ac474c9fa228d4b, type: 3}

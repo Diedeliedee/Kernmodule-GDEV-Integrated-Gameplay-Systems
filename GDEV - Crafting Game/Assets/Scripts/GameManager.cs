@@ -1,8 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Gather System")]
+    [SerializeField] private GatherComponent baseGatherComponent;
+
     [Header("Crafting System")]
     [SerializeField] private CraftingRecipe[] allAvailableRecipes;
     [SerializeField] private GameObject recipeUIPrefab;
@@ -24,14 +26,10 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
 
-        tickManager.Add(new GatherManager(
-            new Dictionary<ItemData, GatherInfo.GatherChance>()
-            {
-                // Insert Standard ItemData
-            }
-        ));
-
-        tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
+        tickManager.Add(new GatherManager(baseGatherComponent));
+        tickManager.Add(
+            new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent)
+        );
     }
 
     private void Start()

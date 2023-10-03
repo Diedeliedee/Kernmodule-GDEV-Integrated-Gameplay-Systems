@@ -18,10 +18,11 @@ public class CraftingManager : IUpdatable
     {
         recipeUIPrefab = _recipeUIPrefab;
         recipeUIParent = _recipeUIParent;
-        lockedRecipes.AddRange(_allRecipes);
 
         lockedRecipes = new List<CraftingRecipe>();
         unlockedRecipes = new List<CraftingRecipe>();
+
+        lockedRecipes.AddRange(_allRecipes);
     }
 
     public void OnStart() 

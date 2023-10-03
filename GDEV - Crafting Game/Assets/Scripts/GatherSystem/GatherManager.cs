@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class GatherManager : IUpdatable
 {
-    private GatherInfo gatherInfo;
     private IInventory inventory;
+    private readonly List<GatherComponent> gatherComponents;
+    private readonly GatherInfo gatherInfo;
 
-    public GatherManager(Dictionary<ItemData, GatherInfo.GatherChance> startingSettings) 
+    public GatherManager(GatherComponent _baseGatherComponent) 
     {
-        gatherInfo = new GatherInfo(startingSettings);
+        gatherComponents = new List<GatherComponent>();
+        gatherInfo = new GatherInfo();
+        AddGatherComponent(_baseGatherComponent);
     }
 
     public void OnStart()
@@ -20,7 +23,7 @@ public class GatherManager : IUpdatable
     {
         List<ItemStack> itemStacks = new();
 
-        foreach (KeyValuePair<ItemData, GatherInfo.GatherChance> gatherItem in gatherInfo.gatherItems)
+        foreach (KeyValuePair<ItemData, GatherChance> gatherItem in gatherInfo.gatherItems)
         {
             float randomPercentage = Random.Range(0.00001f, 100.0f);
 
@@ -35,4 +38,15 @@ public class GatherManager : IUpdatable
     }
 
     public void OnUpdate() { }
+
+    public void AddGatherComponent(GatherComponent _gatherComponent)
+    {
+        gatherComponents.Add(_gatherComponent);
+
+        gatherInfo.gatherItems.Clear();
+        foreach (GatherComponent component in gatherComponents)
+        {
+            gatherInfo.Decorate(component);
+        }
+    }
 }
