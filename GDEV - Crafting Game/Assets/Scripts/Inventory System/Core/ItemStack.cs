@@ -1,4 +1,5 @@
-﻿public struct ItemStack
+﻿[System.Serializable]
+public struct ItemStack
 {
     public ItemData Item;
     public int Amount;
