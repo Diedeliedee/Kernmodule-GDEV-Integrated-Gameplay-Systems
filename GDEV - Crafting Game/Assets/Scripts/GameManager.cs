@@ -24,14 +24,14 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
 
-        tickManager.Add(new GatherSystem(
+        tickManager.Add(new GatherManager(
             new Dictionary<ItemData, GatherInfo.GatherChance>()
             {
                 // Insert Standard ItemData
             }
         ));
 
-        tickManager.Add(new CraftingSystem(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
+        tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
     }
 
     private void Start()

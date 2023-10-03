@@ -739,7 +739,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 2130608414}
   m_HandleRect: {fileID: 2130608413}
-  m_Direction: 3
+  m_Direction: 2
   m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
@@ -1283,6 +1283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allAvailableRecipes:
   - {fileID: 11400000, guid: a41359f98b1fad6458c3d2833d1a2fcd, type: 2}
+  recipeUIPrefab: {fileID: 2198322172647252315, guid: 2eb3facf23111a446ac474c9fa228d4b, type: 3}
+  recipeUIParent: {fileID: 1757691495}
+  canvas: {fileID: 583360599}
 --- !u!4 &1130079491
 Transform:
   m_ObjectHideFlags: 0
