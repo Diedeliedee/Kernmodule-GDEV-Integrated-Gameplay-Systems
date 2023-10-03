@@ -7,23 +7,10 @@ using UnityEngine;
 
 public class Tile
 {
-    //  Public:
-    public readonly RectTransform Transform = null;
-
-    //  Private:
     private ItemStack contents = default;
 
-    //  Properties:
     public ItemStack Contents => contents;
     public bool HasContents => contents.Amount > 0;
-
-    public Tile(int _xCoordinate, int _yCoordinate, Transform _parent = null)
-    {
-        //var createdTile = new GameObject($"Inventory Tile ({_xCoordinate}, {_yCoordinate})");
-
-        //Transform = createdTile.AddComponent<RectTransform>();
-        //Transform.parent = _parent;
-    }
 
     #region Modifiers
     public void SetContents(ItemStack _stack) => contents = _stack;
