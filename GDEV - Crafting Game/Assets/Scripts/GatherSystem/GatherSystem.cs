@@ -4,13 +4,17 @@ using UnityEngine;
 public class GatherSystem : IUpdatable
 {
     private GatherInfo gatherInfo;
+    private IInventory inventory;
 
     public GatherSystem(Dictionary<ItemData, GatherInfo.GatherChance> startingSettings) 
     {
         gatherInfo = new GatherInfo(startingSettings);
     }
 
-    public void OnStart() { }
+    public void OnStart()
+    {
+        inventory = ServiceLocator.Instance.Get<IInventory>();
+    }
 
     public void OnFixedUpdate()
     {
@@ -27,7 +31,7 @@ public class GatherSystem : IUpdatable
             }
         }
 
-        ServiceLocator.Instance.Get<IInventory>().Add(itemStacks.ToArray());
+        inventory.Add(itemStacks.ToArray());
     }
 
     public void OnUpdate() { }
