@@ -7,22 +7,46 @@ using UnityEngine;
 
 public class InventoryManager
 {
-    private RectTransform transform = null;
-    private GridInventory inventory = null;
+    private readonly RectTransform root = null;
+    private readonly GridSettings settings = null;
+    private readonly GridInventory inventory = null;
 
-    private GridSettings settings = null;
+    private SlotElement[,] elementGrid = null;
 
     public IInventory Inventory => inventory;
 
-    public InventoryManager(Transform _gridParent)
+    public InventoryManager(RectTransform _gridRoot)
     {
-        var createdInventoryObject = new GameObject("Grid Inventory");
+        //  Gather required information.
+        root = _gridRoot;
+        settings = Resources.Load<GridSettings>("Settings/Grid");
 
-        transform = createdInventoryObject.AddComponent<RectTransform>();
-        transform.SetParent(_gridParent, false);
+        //  Initiate back-end.
+        inventory = new GridInventory(settings.Resolution.x, settings.Resolution.y);
 
-        inventory = new GridInventory(10, 10);
+        //  Initiate front-end.
+        elementGrid = InstantiateGrid(settings.Resolution, root.sizeDelta, inventory.Items);
+    }
 
-        settings = Resources.Load<GridSettings>("Grid Inventory/Grid Settings");
+    private SlotElement[,] InstantiateGrid(Vector2Int _gridRes, Vector2 _gridSize, Tile[,] tiles)
+    {
+        var slotSize = new Vector2(_gridSize.x / _gridRes.x, _gridSize.y / _gridRes.y);
+        var grid = new SlotElement[_gridRes.x, _gridRes.y];
+
+        for (int x = 0; x < settings.Resolution.x; x++)
+        {
+            for (int y = 0; y < settings.Resolution.y; y++)
+            {
+                var createdSlot = GameObject.Instantiate(Resources.Load<GameObject>("Grid Inventory/PRE_Slot"), root);
+                var transform = createdSlot.GetComponent<RectTransform>();
+
+                createdSlot.name = $"Grid Slot ({x}, {y})";
+                transform.sizeDelta = slotSize;
+                transform.anchoredPosition = new Vector2(x / settings.Resolution.x * root.sizeDelta.x, y / settings.Resolution.y * root.sizeDelta.y);
+
+                grid[x, y] = new SlotElement(transform, tiles[x, y]);
+            }
+        }
+        return grid;
     }
 }
