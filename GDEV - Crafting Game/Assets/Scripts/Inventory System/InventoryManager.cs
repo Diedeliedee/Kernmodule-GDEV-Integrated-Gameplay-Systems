@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InventoryManager
 {
@@ -33,17 +28,21 @@ public class InventoryManager
         var slotSize = new Vector2(_gridSize.x / _gridRes.x, _gridSize.y / _gridRes.y);
         var grid = new SlotElement[_gridRes.x, _gridRes.y];
 
+        //  Loop two dimensionally.
         for (int x = 0; x < settings.Resolution.x; x++)
         {
             for (int y = 0; y < settings.Resolution.y; y++)
             {
-                var createdSlot = GameObject.Instantiate(Resources.Load<GameObject>("Grid Inventory/PRE_Slot"), root);
+                //  Cache created objects.
+                var createdSlot = Object.Instantiate(Resources.Load<GameObject>("Grid Inventory/PRE_Slot"), root);
                 var transform = createdSlot.GetComponent<RectTransform>();
 
+                //  Alter transform of the slot.
                 createdSlot.name = $"Grid Slot ({x}, {y})";
                 transform.sizeDelta = slotSize;
-                transform.anchoredPosition = new Vector2(x / settings.Resolution.x * root.sizeDelta.x, y / settings.Resolution.y * root.sizeDelta.y);
+                transform.anchoredPosition = new Vector2((float)x / settings.Resolution.x * root.sizeDelta.x, -(float)y / settings.Resolution.y * root.sizeDelta.y);
 
+                //  Create slot elements.
                 grid[x, y] = new SlotElement(transform, tiles[x, y]);
             }
         }

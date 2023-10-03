@@ -17,6 +17,8 @@ public class InteractionManager : IService, IUpdatable
     {
         camera = Camera.main;
         settings = Resources.Load<InteractionSettings>("Settings/Interaction");
+
+        ServiceLocator.Instance.Add(this);
     }
 
     public void OnFixedUpdate() { }

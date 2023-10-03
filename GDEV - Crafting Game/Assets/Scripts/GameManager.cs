@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform recipeUIParent;
     
     [Header("Reference")]
-    [SerializeField] private RectTransform canvas;
+    [SerializeField] private RectTransform inventoryRoot;
 
     private ServiceLocator serviceLocator = null;
     private InventoryManager inventoryManager = null;
@@ -18,14 +18,15 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        serviceLocator = new ServiceLocator();
+
         tickManager = new TickManager();
         interactionManager = new InteractionManager();
-        inventoryManager = new InventoryManager(canvas);
+        inventoryManager = new InventoryManager(inventoryRoot);
 
-        serviceLocator = new ServiceLocator();
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
-        serviceLocator.Add(interactionManager);
+      //serviceLocator.Add(interactionManager); Switched to the constructor of InteractionManager class!
 
         tickManager.Add(new GatherManager(
             new Dictionary<ItemData, GatherInfo.GatherChance>()
@@ -35,7 +36,7 @@ public class GameManager : MonoBehaviour
         ));
 
         tickManager.Add(interactionManager);
-        tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
+        //tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
     }
 
     private void Start()

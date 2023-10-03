@@ -271,7 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a874d48641d234592355ac3a830e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 16108651}
+  allAvailableRecipes: []
+  recipeUIPrefab: {fileID: 0}
+  recipeUIParent: {fileID: 0}
+  inventoryRoot: {fileID: 2575143299015981436}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,11 +495,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 838781003226765838, guid: f3ce216fd7d633048972202588114d29, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 838781003226765838, guid: f3ce216fd7d633048972202588114d29, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 838781003226765838, guid: f3ce216fd7d633048972202588114d29, type: 3}
       propertyPath: m_LocalPosition.x
