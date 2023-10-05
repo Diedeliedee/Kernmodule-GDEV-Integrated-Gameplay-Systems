@@ -2,11 +2,19 @@
 
 public class GridInventory : IInventory
 {
-    private readonly Tile[,] itemGrid = null;
+    public Tile[,] Items { get; private set; }
 
     public GridInventory(int _width, int _height)
     {
-        itemGrid = new Tile[_width, _height];
+        Items = new Tile[_width, _height];
+
+        bool OnIterate(int x, int y)
+        {
+            Items[x, y] = new Tile();
+            return false;
+        }
+
+        Loop(OnIterate);
     }
 
     public void Add(params ItemStack[] itemStacks)
@@ -18,20 +26,20 @@ public class GridInventory : IInventory
             bool OnIterate(int x, int y)
             {
                 //  If the grid in the slot is occupied..
-                if (itemGrid[x, y].HasContents)
+                if (Items[x, y].HasContents)
                 {
                     //  Keep looping if it isn't the same type as the passed in item stack.
-                    if (!itemGrid[x, y].CompareType(itemStack.Item)) return false;
+                    if (!Items[x, y].CompareType(itemStack.Item)) return false;
 
                     //  Otherwise, add to the value of the stack.
-                    itemGrid[x, y].ChangeValue(itemStack.Amount);
+                    Items[x, y].ChangeValue(itemStack.Amount);
                     return true;
                 }
 
                 //  Otherwise, set the empty slot to be the passed in item stack.
                 else
                 {
-                    itemGrid[x, y].SetContents(itemStack);
+                    Items[x, y].SetContents(itemStack);
                     return true;
                 }
             }
@@ -50,8 +58,8 @@ public class GridInventory : IInventory
             //  Iterate through every slot.
             bool OnIterate(int x, int y)
             {
-                if (!itemGrid[x, y].Contains(itemStack.Amount)) return false;  //  Keep looping if the slot has an insufficient amount.
-                if (!itemGrid[x, y].CompareType(itemStack.Item)) return false; //  Keep looping if the data of the stack is not the same.
+                if (!Items[x, y].Contains(itemStack.Amount)) return false;  //  Keep looping if the slot has an insufficient amount.
+                if (!Items[x, y].CompareType(itemStack.Item)) return false; //  Keep looping if the data of the stack is not the same.
 
                 //  If the sufficient items of the type have been found, stop the loop, and confirm the check.
                 checksPassed++;
@@ -74,10 +82,10 @@ public class GridInventory : IInventory
             bool OnIterate(int x, int y)
             {
                 //  Keep looping if the data of the stack is not the same.
-                if (!itemGrid[x, y].CompareType(itemStack.Item)) return false;
+                if (!Items[x, y].CompareType(itemStack.Item)) return false;
 
                 //  If the item on the slot is of the same type than of the passed in stack, remove the amount.
-                itemGrid[x, y].ChangeValue(-itemStack.Amount);
+                Items[x, y].ChangeValue(-itemStack.Amount);
                 return true;
             }
 
@@ -90,7 +98,7 @@ public class GridInventory : IInventory
     /// </summary>
     public void SetAt(Vector2Int coordinates, ItemStack stack)
     {
-        itemGrid[coordinates.x, coordinates.y].SetContents(stack);
+        Items[coordinates.x, coordinates.y].SetContents(stack);
     }
 
     /// <summary>
@@ -98,7 +106,7 @@ public class GridInventory : IInventory
     /// </summary>
     public void ReplaceAt(Vector2Int coordinates, ItemStack stack)
     {
-        var selectedTile = itemGrid[coordinates.x, coordinates.y];
+        var selectedTile = Items[coordinates.x, coordinates.y];
 
         //  If the tile is empty, just set the contents.
         if (!selectedTile.HasContents)
@@ -119,9 +127,9 @@ public class GridInventory : IInventory
     /// </summary>
     private void Loop(Iteration onIterate, int xStart = 0, int yStart = 0)
     {
-        for (int y = yStart; y < itemGrid.GetLength(0); y++)
+        for (int y = yStart; y < Items.GetLength(0); y++)
         {
-            for (int x = xStart; x < itemGrid.GetLength(1); x++)
+            for (int x = xStart; x < Items.GetLength(1); x++)
             {
                 if (onIterate(x, y)) return;
             }
