@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Inventory Settings", menuName = "Settings/Inventory Settings", order = 0)]
+[CreateAssetMenu(fileName = "New Grid Settings", menuName = "Settings/Grid Settings", order = 1)]
 public class GridSettings : ScriptableObject
 {
-    [SerializeField] private Vector2Int tileSize;
-    [SerializeField] private float tileDistance;
+    [SerializeField] private Vector2Int resolution;
 
-    public Vector2Int TileSize => tileSize;
-    public float TileDistance => tileDistance;
+    public Vector2Int Resolution => resolution;
 }
