@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d0899497c99fc441a0374c1bfa4dcc9, type: 3}
+  m_Name: t_SilverPickaxe
+  m_EditorClassIdentifier: 
+  input:
+  - Item: {fileID: 11400000, guid: 47d60920069607142acc4987d26e8728, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: 0f904acd68756644fadbacee648366e1, type: 2}
+    Amount: 1
+  - Item: {fileID: 11400000, guid: ec869eff3c63a784dbda03e97e54a5f6, type: 2}
+    Amount: 2
+  output:
+    Item: {fileID: 11400000, guid: ef0de6a0be7b7b543b4d4d382eaea823, type: 2}
+    Amount: 1
+  gatherComponet: {fileID: 11400000, guid: eea04ccfc2a6bec40951171f43ce55c5, type: 2}
+  duration: 3

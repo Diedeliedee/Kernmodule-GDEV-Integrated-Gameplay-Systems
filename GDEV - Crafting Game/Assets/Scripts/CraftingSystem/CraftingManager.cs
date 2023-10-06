@@ -19,6 +19,8 @@ public class CraftingManager : IUpdatable
     private readonly Sprite check;
     private readonly Sprite cross;
 
+    private IGatherManager gatherManager;
+
     public CraftingManager(RectTransform _recipeUIParent, RectTransform _craftingQueueUIParent, Image _craftingQueueProgressSlider)
     {
         check = Resources.Load<Sprite>("Art/UI_Flat_Checkmark_Medium");
@@ -44,6 +46,7 @@ public class CraftingManager : IUpdatable
     public void OnStart()
     {
         inventory = ServiceLocator.Instance.Get<IInventory>();
+        gatherManager = ServiceLocator.Instance.Get<IGatherManager>();
     }
 
     public void OnFixedUpdate()
@@ -101,6 +104,9 @@ public class CraftingManager : IUpdatable
         if (currentItem.PassedTime > currentItem.Recipe.Duration)
         {
             inventory.Add(currentItem.Recipe.Output);
+
+            if (currentItem.Recipe.GatherComponet != null) { gatherManager.AddGatherComponent(currentItem.Recipe.GatherComponet); }
+
             currentItem.Destroy();
             craftingQueue.RemoveAt(0);
         }
