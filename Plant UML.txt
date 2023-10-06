@@ -1,110 +1,182 @@
 @startuml
 
-'Core Systems
 class GameManager
 {
-  -tickManager: TickManager
-
+  -serivceLocator : ServiceLocator
+  -inventoryManager : InventoryManager
+  -tickManager : TickManager
   +Awake() : void
   +Start() : void
   +Update() : void
 }
 
-class ServiceLocator
+package "Service Locator"
 {
-  -services : Dictionary<Type, IService>
-  +Add(...) : void
-  +Remove(...) : void
-  +Get<T>() : void
+  class ServiceLocator
+  {
+    -services : Dictionary<Type, IService>
+    +Add(...) : void
+    +Remove(...) : void
+    +Get<T>() : void
+  }
+  
+  interface IService
+  
+  GameManager *-- ServiceLocator
+  ServiceLocator o.. IService
 }
 
-class TickManager
+package "Tick System"
 {
-  -subscribed : List<IUpdatable> 
-  +OnUpdate() : void
-  +Add<T>(updatable : T) : T
+  class TickManager
+  {
+    -subscribed : List<IUpdatable> 
+    +OnUpdate() : void
+    +Add<T>(updatable : T) : T
+  }
+  
+  interface IUpdatable
+  
+  GameManager *-- TickManager
+  TickManager o.. IUpdatable
 }
 
-interface IService
-interface IUpdatable
-
-GameManager *-- TickManager
-TickManager o.. IUpdatable
-ServiceLocator o.. IService
-
-'Inventory System Base
-interface IInventory <<Service>>
+package "Gathering System"
 {
-  +Add(itemStack : params ItemStack[]) : void
-  +Remove(itemStack : params ItemStack[]) : void
-  +Contains(itemStack : params ItemStack[]) : bool
+  class GatherManager <<Updatable>>
+  {
+    -gatherInfo : GatherInfo
+    -inventory : IInventory
+  }
+
+  class GatherInfo
+  {
+    -gatherItems : Dictionary<ItemData, GatherChance>
+  }
+  
+  struct GatherChance
+  {
+    +gatherChancePercentage : float
+    +maxStackSize : int
+  }
+
+  GameManager *-- GatherManager
+  GatherManager *-- GatherInfo
+  GatherInfo o-- GatherChance
 }
 
-struct ItemStack
+package "Crafting System"
 {
-  type : ItemData
-  amount : int
+  class CraftingManager <<Updatable>>
+  {
+    -inventory : IInventory
+    -lockedRecipes : List<CraftingRecipe>
+    -unlockedRecipes : List<CraftingRecipe>
+    -recipeQueue : Que<CraftingRecipe>
+    +CanBeCrafted(recipe : CraftingRecipe) : bool
+    +QueueCraft(recipe : CraftingRecipe) : void
+    +Craft(recipe : CraftingRecipe) : void
+    +CheckForRecipeUnlocks()
+  }
+
+  class CraftingRecipe <<ScriptableObject>>
+  {
+    +Input : itemStack[]
+    +Output : itemStack[]
+    +Duration : int
+  
+  }
+  
+  GameManager *-- CraftingManager
+  CraftingManager o-- CraftingRecipe
 }
 
-class ItemData
+package "Inventory System"
 {
-  +image : Sprite
+  class InventoryManager
+  {
+    -root : RectTransform
+    -settings : GridSettings
+    -inventory : GridInventory
+    -elementGrid : SlotElement[,]
+    -InstantiateGrid(_gridRes : Vector2Int, _gridSize : Vector2Int, tiles : Tile[,])
+  }
+  
+  class SlotElement
+  {
+    -connectedTile : Tile
+    -itemImage : Image
+    -itemText : TextMeshProUGUI
+    -OnTileAltered() : void
+  }
+  
+  class GridSettings <<ScriptableObject>>
+  {
+    +Resolution : Vector2Int
+  }
+
+  class GridInventory <<Service>> implements IInventory
+  {
+    -itemGrid : Tile[]
+  }
+  
+  class Tile
+  {
+    +OnAltered : event Action<ItemStack>
+    -contents : ItemStack
+    +SetContents() : void
+    +ChangeValue(amount : int) : void
+  }
+
+  interface IInventory
+  {
+    +Add(itemStack : params ItemStack[]) : void
+    +Remove(itemStack : params ItemStack[]) : void
+    +Contains(itemStack : params ItemStack[]) : bool
+  }
+  
+  struct ItemStack
+  {
+    +Type : ItemData
+    +Amount : int
+  }
+  
+  class ItemData
+  {
+    +Image : Sprite
+  }
+  
+  GameManager *-- InventoryManager
+  InventoryManager o-- GridSettings
+  InventoryManager *-- SlotElement
+  GridInventory *-- Tile
+  SlotElement *-- Tile
+  IInventory --> ItemStack
+  ItemStack *-- ItemData
 }
 
-IInventory --> ItemStack
-ItemStack *-- ItemData
-
-'Grid Inventory System
-class GridInventory implements IInventory
+package "Interaction System" <<cut>>
 {
-  -itemGrid : Tile[]
+  class InteractionManager <<Service, Updatable>>
+  {
+    -subscribedElements : Dictionary<RectTransform, IInteractable>
+    -selectedElement : RectTransform
+    +Subscribe(element : IInteractable, key : RectTransform)
+  }
+
+  interface IInteractable
+  {
+    +OnClick(mousePos : Vector2) : void
+    +OnRelease(mousePos : Vector2) : void
+  }
+  
+  abstract class BaseInteractable implements IInteractable
+  {
+    -element : RectTransform
+    +BaseInteractable()
+  }
+  
+  InteractionManager o.. IInteractable
 }
-
-class Tile
-{
-  -contents : ItemStack
-  +SetContents() : void
-  +ChangeValue(amount : int) : void
-}
-
-class InventoryManager
-{
-  -inventory : GridInventory
-  -elements : SlotElement[]
-  +GetElement(elementTransform : Transform) : TileElement
-  -Connect(tiles : Tile[]) : void
-}
-
-class SlotElement extends BaseInteractable
-{
-  -connectedTile : Tile
-}
-
-GridInventory *-- Tile
-InventoryManager *-- SlotElement
-SlotElement *-- Tile
-
-'Interaction System
-interface IInteractable
-{
-  +OnClick(mousePos : Vector2) : void
-  +OnRelease(mousePos : Vector2) : void
-}
-
-abstract class BaseInteractable implements IInteractable
-{
-  -element : RectTransform
-  +BaseInteractable()
-}
-
-class InteractionManager <<Service, Updatable>>
-{
-  -subscribedElements : Dictionary<RectTransform, IInteractable>
-  -selectedElement : RectTransform
-  +Subscribe(element : IInteractable, key : RectTransform)
-}
-
-InventoryManager *-- GridInventory
-InteractionManager .. IInteractable
 
 @enduml
