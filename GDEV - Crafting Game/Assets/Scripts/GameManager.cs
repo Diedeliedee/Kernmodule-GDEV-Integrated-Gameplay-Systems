@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
             }
         ));
 
-        //tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
+        tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
     }
 
     private void Start()
