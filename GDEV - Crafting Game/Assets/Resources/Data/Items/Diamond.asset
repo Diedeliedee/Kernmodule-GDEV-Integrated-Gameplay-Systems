@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c916c549bf2044896d392e08d4d9c1, type: 3}
-  m_Name: Grid
+  m_Script: {fileID: 11500000, guid: 2073c280904a0e64d9475af43abc6b3c, type: 3}
+  m_Name: Diamond
   m_EditorClassIdentifier: 
-  resolution: {x: 6, y: 6}
+  itemName: Diamond
+  image: {fileID: 21300000, guid: 30032408afd643e438ed4c2f36200be2, type: 3}
