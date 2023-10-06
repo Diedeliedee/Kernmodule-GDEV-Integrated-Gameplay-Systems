@@ -25,10 +25,13 @@ public class GameManager : MonoBehaviour
         tickManager = new TickManager();
         inventoryManager = new InventoryManager(inventoryRoot);
 
+        GatherManager gatherManager = new(baseGatherComponent);
+
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
+        serviceLocator.Add(gatherManager, typeof(IGatherManager));
 
-        tickManager.Add(new GatherManager(baseGatherComponent));
+        tickManager.Add(gatherManager);
         tickManager.Add(new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar));
     }
 

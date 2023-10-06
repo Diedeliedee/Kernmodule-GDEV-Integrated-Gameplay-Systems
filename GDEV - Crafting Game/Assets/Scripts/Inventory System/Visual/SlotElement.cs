@@ -27,7 +27,18 @@ public class SlotElement
 
     private void OnTileAltered(ItemStack _stack)
     {
-        itemImage.sprite = _stack.Item.Image;
-        itemText.text = _stack.Amount.ToString();
+        if (_stack.Amount <= 0)
+        {
+            itemImage.enabled = false;
+            itemText.enabled = false;
+        }
+        else
+        {
+            itemImage.enabled = true;
+            itemText.enabled = true;
+
+            itemImage.sprite = _stack.Item.Image;
+            itemText.text = _stack.Amount.ToString();
+        }
     }
 }

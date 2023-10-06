@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GatherManager : IUpdatable
+public class GatherManager : IUpdatable, IGatherManager
 {
     private IInventory inventory;
     private readonly List<GatherComponent> gatherComponents;
