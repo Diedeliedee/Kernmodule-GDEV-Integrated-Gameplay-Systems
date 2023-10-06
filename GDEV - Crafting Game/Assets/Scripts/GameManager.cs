@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -6,9 +7,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GatherComponent baseGatherComponent;
 
     [Header("Crafting System")]
-    [SerializeField] private CraftingRecipe[] allAvailableRecipes;
-    [SerializeField] private GameObject recipeUIPrefab;
     [SerializeField] private RectTransform recipeUIParent;
+    [SerializeField] private RectTransform craftingQueueUIParent;
+    [SerializeField] private Image craftingQueueProgressBar;
     
     [Header("Reference")]
     [SerializeField] private RectTransform canvas;
@@ -27,9 +28,7 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
 
         tickManager.Add(new GatherManager(baseGatherComponent));
-        tickManager.Add(
-            new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent)
-        );
+        tickManager.Add(new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar));
     }
 
     private void Start()
