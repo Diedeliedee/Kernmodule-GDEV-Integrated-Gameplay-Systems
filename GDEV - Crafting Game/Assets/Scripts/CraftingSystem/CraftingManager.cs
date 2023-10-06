@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,54 +6,66 @@ public class CraftingManager : IUpdatable
 {
     private IInventory inventory;
     private List<CraftingRecipe> lockedRecipes;
-    private List<CraftingRecipe> unlockedRecipes;
 
-    private Queue<CraftingRecipe> recipeQueue;
+    private List<CraftingQueueObject> craftingQueue;
+    private List<UnlockedRecipeObject> unlockedRecipes;
+    private Image craftingQueueProgressSlider;
 
-    private GameObject recipeUIPrefab;
-    private RectTransform recipeUIParent;
+    private readonly GameObject recipeUIPrefab;
+    private readonly RectTransform recipeUIParent;
+    private readonly GameObject craftingQueueItemUIPrefab;
+    private readonly RectTransform craftingQueueUIParent;
 
-    public CraftingManager(CraftingRecipe[] _allRecipes, GameObject _recipeUIPrefab, RectTransform _recipeUIParent)
+    private readonly Sprite check;
+    private readonly Sprite cross;
+
+    public CraftingManager(RectTransform _recipeUIParent, RectTransform _craftingQueueUIParent, Image _craftingQueueProgressSlider)
     {
-        recipeUIPrefab = _recipeUIPrefab;
+        check = Resources.Load<Sprite>("Art/UI_Flat_Checkmark_Medium");
+        cross = Resources.Load<Sprite>("Art/UI_Flat_Cross_Medium");
+
+        recipeUIPrefab = Resources.Load<GameObject>("Crafting/Recipe");
         recipeUIParent = _recipeUIParent;
-        lockedRecipes.AddRange(_allRecipes);
+
+        craftingQueueItemUIPrefab = Resources.Load<GameObject>("Crafting/CraftingQueueItem");
+        craftingQueueUIParent = _craftingQueueUIParent;
+
+        craftingQueueProgressSlider = _craftingQueueProgressSlider;
+
+        craftingQueue = new List<CraftingQueueObject>();
 
         lockedRecipes = new List<CraftingRecipe>();
-        unlockedRecipes = new List<CraftingRecipe>();
+        unlockedRecipes = new List<UnlockedRecipeObject>();
+
+        CraftingRecipe[] allRecipes = Resources.LoadAll<CraftingRecipe>("Data/CraftingRecipes");
+        lockedRecipes.AddRange(allRecipes);
     }
 
-    public void OnStart() 
+    public void OnStart()
     {
         inventory = ServiceLocator.Instance.Get<IInventory>();
     }
-    
+
     public void OnFixedUpdate()
     {
         CheckForRecipeUnlocks();
+        UpdateCraftingQueue();
+        UpdateUnlockedRecipes();
     }
 
     public void OnUpdate() { }
-
-
-    public bool CanBeCrafted(CraftingRecipe recipe)
-    {
-        return inventory.Contains(recipe.Input);
-    }
 
     public void QueueCraft(CraftingRecipe recipe)
     {
         if (!CanBeCrafted(recipe)) { return; }
 
-        recipeQueue.Enqueue(recipe);
+        inventory.Remove(recipe.Input);
+        craftingQueue.Add(new CraftingQueueObject(recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
     }
 
-    private void Craft(CraftingRecipe recipe)
+    private bool CanBeCrafted(CraftingRecipe recipe)
     {
-        if (!CanBeCrafted(recipe)) { return; }
-
-        inventory.Remove(recipe.Input);
-        inventory.Add(recipe.Output);
+        return inventory.Contains(recipe.Input);
     }
 
     private void CheckForRecipeUnlocks()
@@ -72,12 +83,35 @@ public class CraftingManager : IUpdatable
             if (inventory.Contains(itemStack))
             {
                 lockedRecipes.RemoveAt(recipeIndex);
-                unlockedRecipes.Add(lockedRecipe);
-
-                GameObject newRecipe = Object.Instantiate(recipeUIPrefab, recipeUIParent);
-                newRecipe.GetComponentInChildren<TextMeshProUGUI>().text = lockedRecipe.name;
-                newRecipe.GetComponentInChildren<Button>().onClick.AddListener(() => Craft(lockedRecipe));
+                unlockedRecipes.Add(
+                    new UnlockedRecipeObject(lockedRecipe, recipeUIParent, recipeUIPrefab, () => QueueCraft(lockedRecipe), check, cross)
+                );
             }
+        }
+    }
+
+    private void UpdateCraftingQueue()
+    {
+        if (craftingQueue.Count <= 0) { return; }
+        
+        CraftingQueueObject currentItem = craftingQueue[0];
+        currentItem.PassedTime += Time.deltaTime;
+        craftingQueueProgressSlider.fillAmount = Mathf.InverseLerp(0, currentItem.Recipe.Duration, currentItem.PassedTime);
+
+        if (currentItem.PassedTime > currentItem.Recipe.Duration)
+        {
+            inventory.Add(currentItem.Recipe.Output);
+            currentItem.Destroy();
+            craftingQueue.RemoveAt(0);
+        }
+    }
+
+    private void UpdateUnlockedRecipes()
+    {
+        foreach (UnlockedRecipeObject recipeObject in unlockedRecipes) 
+        {
+            if (CanBeCrafted(recipeObject.Recipe)) { recipeObject.SetIsCraftable(true); }
+            else { recipeObject.SetIsCraftable(false); }
         }
     }
 }
