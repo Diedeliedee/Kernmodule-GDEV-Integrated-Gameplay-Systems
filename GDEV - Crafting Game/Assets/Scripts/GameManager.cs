@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform recipeUIParent;
     
     [Header("Reference")]
-    [SerializeField] private RectTransform canvas;
+    [SerializeField] private RectTransform inventoryRoot;
 
     private ServiceLocator serviceLocator = null;
     private InventoryManager inventoryManager = null;
@@ -17,10 +17,11 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        tickManager = new TickManager();
-        inventoryManager = new InventoryManager(canvas);
-
         serviceLocator = new ServiceLocator();
+
+        tickManager = new TickManager();
+        inventoryManager = new InventoryManager(inventoryRoot);
+
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
 
