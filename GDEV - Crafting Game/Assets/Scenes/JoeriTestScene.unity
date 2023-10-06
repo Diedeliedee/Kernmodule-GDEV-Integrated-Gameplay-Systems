@@ -271,9 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a874d48641d234592355ac3a830e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allAvailableRecipes: []
-  recipeUIPrefab: {fileID: 0}
+  baseGatherComponent: {fileID: 11400000, guid: dd70abc43a9f27f48a1d700c0be1d02f, type: 2}
   recipeUIParent: {fileID: 0}
+  craftingQueueUIParent: {fileID: 0}
+  craftingQueueProgressBar: {fileID: 0}
   inventoryRoot: {fileID: 2575143299015981436}
 --- !u!1 &705507993
 GameObject:

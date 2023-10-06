@@ -17,7 +17,7 @@ public class UnlockedRecipeObject
         Recipe = _recipe;
 
         connectedGameObject = Object.Instantiate(_recipeUIPrefab, _recipeUIParent);
-        connectedGameObject.GetComponentInChildren<TextMeshProUGUI>().text = _recipe.name;
+        connectedGameObject.GetComponentInChildren<TextMeshProUGUI>().text = _recipe.Output.Item.ItemName;
         connectedGameObject.transform.GetChild(0).GetComponent<Image>().sprite = _recipe.Output.Item.Image;
         connectedGameObject.GetComponent<Button>().onClick.AddListener(onClick);
         isCraftableImage = connectedGameObject.transform.GetChild(2).GetComponent<Image>();
