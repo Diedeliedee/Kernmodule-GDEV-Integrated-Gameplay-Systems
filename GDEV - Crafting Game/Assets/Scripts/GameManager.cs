@@ -14,19 +14,16 @@ public class GameManager : MonoBehaviour
     private ServiceLocator serviceLocator = null;
     private InventoryManager inventoryManager = null;
     private TickManager tickManager = null;
-    private InteractionManager interactionManager = null;
 
     private void Awake()
     {
         serviceLocator = new ServiceLocator();
 
         tickManager = new TickManager();
-        interactionManager = new InteractionManager();
         inventoryManager = new InventoryManager(inventoryRoot);
 
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
-      //serviceLocator.Add(interactionManager); Switched to the constructor of InteractionManager class!
 
         tickManager.Add(new GatherManager(
             new Dictionary<ItemData, GatherInfo.GatherChance>()
@@ -35,7 +32,6 @@ public class GameManager : MonoBehaviour
             }
         ));
 
-        tickManager.Add(interactionManager);
         //tickManager.Add(new CraftingManager(allAvailableRecipes, recipeUIPrefab, recipeUIParent));
     }
 
