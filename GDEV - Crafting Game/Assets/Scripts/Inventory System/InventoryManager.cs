@@ -1,20 +1,26 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager
 {
-    private readonly RectTransform root = null;
+    //  Core:
     private readonly GridSettings settings = null;
     private readonly GridInventory inventory = null;
 
+    //  UI:
+    private readonly RectTransform root = null;
+    private readonly GridLayoutGroup gridLayout = null;
     private SlotElement[,] elementGrid = null;
 
+    //  Properties:
     public IInventory Inventory => inventory;
 
     public InventoryManager(RectTransform _gridRoot)
     {
         //  Gather required information.
-        root = _gridRoot;
         settings = Resources.Load<GridSettings>("Settings/Grid");
+        root = _gridRoot;
+        gridLayout = root.GetComponent<GridLayoutGroup>();
 
         //  Initiate back-end.
         inventory = new GridInventory(settings.Resolution.x, settings.Resolution.y);
@@ -28,22 +34,19 @@ public class InventoryManager
         var grid = new SlotElement[settings.Resolution.x, settings.Resolution.y];
         var slotSize = GetDesiredSlotSize();
 
+        gridLayout.cellSize = new Vector2(slotSize.x, slotSize.x);
+        gridLayout.spacing = new Vector2(settings.Spacing, settings.Spacing);
+        gridLayout.constraintCount = settings.Resolution.x;
+
         //  Loop two dimensionally.
         for (int x = 0; x < settings.Resolution.x; x++)
         {
             for (int y = 0; y < settings.Resolution.y; y++)
             {
-                //  Cache created objects.
                 var createdSlot = Object.Instantiate(Resources.Load<GameObject>("Grid Inventory/PRE_Slot"), root);
                 var transform = createdSlot.GetComponent<RectTransform>();
-                var position = GetDesiredSlotPosition(x, y, slotSize);
 
-                //  Alter transform of the slot.
                 createdSlot.name = $"Grid Slot ({x}, {y})";
-                transform.sizeDelta = slotSize;
-                transform.anchoredPosition = position;
-
-                //  Create slot elements.
                 grid[x, y] = new SlotElement(transform, tiles[x, y]);
             }
         }
@@ -63,24 +66,5 @@ public class InventoryManager
         size.y -= settings.Spacing;
 
         return size;
-    }
-
-    private Vector2 GetDesiredSlotPosition(int x, int y, Vector2 _slotSize)
-    {
-        var position = new Vector2();
-
-        //  Create percentage [0...1] value.
-        position.x = (float)x / settings.Resolution.x;   
-        position.y = (float)-y / settings.Resolution.y;
-
-        //  Multiply the percantage by the width and height of the parent transform. 
-        position.x *= root.sizeDelta.x;                             
-        position.y *= root.sizeDelta.y;
-
-        //  Presuming the pivot of the slot is in the middle, offset by half of it's size.
-        position.x += _slotSize.x;                                  
-        position.y += _slotSize.y;
-
-        return position;
     }
 }

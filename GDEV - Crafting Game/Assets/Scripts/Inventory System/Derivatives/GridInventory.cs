@@ -127,9 +127,9 @@ public class GridInventory : IInventory
     /// </summary>
     private void Loop(Iteration onIterate, int xStart = 0, int yStart = 0)
     {
-        for (int y = yStart; y < Items.GetLength(0); y++)
+        for (int x = yStart; x < Items.GetLength(0); x++)
         {
-            for (int x = xStart; x < Items.GetLength(1); x++)
+            for (int y = xStart; y < Items.GetLength(1); y++)
             {
                 if (onIterate(x, y)) return;
             }
