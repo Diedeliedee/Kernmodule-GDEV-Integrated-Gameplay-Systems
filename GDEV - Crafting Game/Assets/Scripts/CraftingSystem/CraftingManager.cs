@@ -2,14 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftingManager : IUpdatable
+public class CraftingManager : BaseUpdatable
 {
     private IInventory inventory;
-    private List<CraftingRecipe> lockedRecipes;
+    private IGatherManager gatherManager;
 
-    private List<CraftingQueueObject> craftingQueue;
-    private List<UnlockedRecipeObject> unlockedRecipes;
-    private Image craftingQueueProgressSlider;
+    private readonly List<CraftingRecipe> lockedRecipes;
+
+    private readonly List<CraftingQueueObject> craftingQueue;
+    private readonly List<UnlockedRecipeObject> unlockedRecipes;
+    private readonly Image craftingQueueProgressSlider;
 
     private readonly GameObject recipeUIPrefab;
     private readonly RectTransform recipeUIParent;
@@ -19,10 +21,13 @@ public class CraftingManager : IUpdatable
     private readonly Sprite check;
     private readonly Sprite cross;
 
-    private IGatherManager gatherManager;
+    private readonly RecipeToolTipObject toolTip;
 
-    public CraftingManager(RectTransform _recipeUIParent, RectTransform _craftingQueueUIParent, Image _craftingQueueProgressSlider)
+    public CraftingManager(RectTransform _recipeUIParent, RectTransform _craftingQueueUIParent, RectTransform _toolTipTransform, Image _craftingQueueProgressSlider)
     {
+        toolTip = new RecipeToolTipObject(_toolTipTransform);
+        ServiceLocator.Instance.Get<ITickManager>().Add(toolTip);
+
         check = Resources.Load<Sprite>("Art/UI_Flat_Checkmark_Medium");
         cross = Resources.Load<Sprite>("Art/UI_Flat_Cross_Medium");
 
@@ -43,32 +48,30 @@ public class CraftingManager : IUpdatable
         lockedRecipes.AddRange(allRecipes);
     }
 
-    public void OnStart()
+    public override void OnStart()
     {
         inventory = ServiceLocator.Instance.Get<IInventory>();
         gatherManager = ServiceLocator.Instance.Get<IGatherManager>();
     }
 
-    public void OnFixedUpdate()
+    public override void OnFixedUpdate()
     {
         CheckForRecipeUnlocks();
         UpdateCraftingQueue();
         UpdateUnlockedRecipes();
     }
 
-    public void OnUpdate() { }
-
-    public void QueueCraft(CraftingRecipe recipe)
+    public void QueueCraft(CraftingRecipe _recipe)
     {
-        if (!CanBeCrafted(recipe)) { return; }
+        if (!CanBeCrafted(_recipe)) { return; }
 
-        inventory.Remove(recipe.Input);
-        craftingQueue.Add(new CraftingQueueObject(recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
+        inventory.Remove(_recipe.Input);
+        craftingQueue.Add(new CraftingQueueObject(_recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
     }
 
-    private bool CanBeCrafted(CraftingRecipe recipe)
+    private bool CanBeCrafted(CraftingRecipe _recipe)
     {
-        return inventory.Contains(recipe.Input);
+        return inventory.Contains(_recipe.Input);
     }
 
     private void CheckForRecipeUnlocks()
@@ -87,7 +90,7 @@ public class CraftingManager : IUpdatable
             {
                 lockedRecipes.RemoveAt(recipeIndex);
                 unlockedRecipes.Add(
-                    new UnlockedRecipeObject(lockedRecipe, recipeUIParent, recipeUIPrefab, () => QueueCraft(lockedRecipe), check, cross)
+                    new UnlockedRecipeObject(lockedRecipe, recipeUIParent, recipeUIPrefab, () => QueueCraft(lockedRecipe), toolTip, check, cross)
                 );
             }
         }

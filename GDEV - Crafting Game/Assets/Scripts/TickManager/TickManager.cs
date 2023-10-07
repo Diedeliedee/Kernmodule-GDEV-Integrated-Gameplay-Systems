@@ -2,21 +2,26 @@ using System.Collections.Generic;
 
 public class TickManager : ITickManager
 {
-    private readonly List<IUpdatable> subscribedObjects = new();
+    private readonly List<IUpdatable> subscribedObjects;
 
-    public void Add(IUpdatable updatable)
+    public TickManager()
     {
-        if (!subscribedObjects.Contains(updatable)) 
+        subscribedObjects = new List<IUpdatable>();
+    }
+
+    public void Add(IUpdatable _updatable)
+    {
+        if (!subscribedObjects.Contains(_updatable)) 
         {
-            subscribedObjects.Add(updatable);
+            subscribedObjects.Add(_updatable);
         }
     }
 
-    public void Remove(IUpdatable updatable)
+    public void Remove(IUpdatable _updatable)
     {
-        if (subscribedObjects.Contains(updatable))
+        if (subscribedObjects.Contains(_updatable))
         {
-            subscribedObjects.Remove(updatable);
+            subscribedObjects.Remove(_updatable);
         }
     }
 

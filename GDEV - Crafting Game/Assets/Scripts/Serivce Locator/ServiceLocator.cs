@@ -23,31 +23,31 @@ public class ServiceLocator
     /// <summary>
     /// Add a service to the locator, using the passed in instance to generate a Type key.
     /// </summary>
-    /// <param name="service">The instance to be added as service to the locator.</param>
-    /// <param name="key">Optional type key overload. GetType() doesn't return superclasses or interfaces when passing in a subclass.</param>
-    public void Add(IService service, Type key = null)
+    /// <param name="_service">The instance to be added as service to the locator.</param>
+    /// <param name="_key">Optional type key overload. GetType() doesn't return superclasses or interfaces when passing in a subclass.</param>
+    public void Add(IService _service, Type _key = null)
     {
-        if (key == null) { key = service.GetType(); }
+        if (_key == null) { _key = _service.GetType(); }
 
-        if (services.ContainsKey(key))
+        if (services.ContainsKey(_key))
         {
-            Debug.LogWarning($"Key: {key} already present in the service pool.");
+            Debug.LogWarning($"Key: {_key} already present in the service pool.");
             return;
         }
-        services.Add(key, service);
+        services.Add(_key, _service);
     }
 
     /// <summary>
     /// Remove a service from the locator, using the Type key to identify which instance should be removed.
     /// </summary>
-    public void Remove(Type key)
+    public void Remove(Type _key)
     {
-        if (!services.ContainsKey(key))
+        if (!services.ContainsKey(_key))
         {
-            Debug.LogWarning($"Key: {key} is not present in the service pool.");
+            Debug.LogWarning($"Key: {_key} is not present in the service pool.");
             return;
         }
-        services.Remove(key);
+        services.Remove(_key);
     }
 
     /// <returns>A service attached to the locator, if an instance of the specified generic type is present.</returns>

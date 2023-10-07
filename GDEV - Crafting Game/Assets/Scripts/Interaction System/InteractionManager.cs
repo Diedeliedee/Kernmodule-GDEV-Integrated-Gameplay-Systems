@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class InteractionManager : IService, IUpdatable
 {
-    private Dictionary<int, IInteractable> subscribedElements = new();
+    private readonly Dictionary<int, IInteractable> subscribedElements = new();
 
     private IInteractable clickedElement = null;
     private IInteractable hoveringElement = null;
-
-    public InteractionManager()
-    {
-        ServiceLocator.Instance.Add(this);
-    }
 
     public void OnFixedUpdate() { }
 
@@ -70,13 +59,13 @@ public class InteractionManager : IService, IUpdatable
         subscribedElements.Remove(_key.GetInstanceID());
     }
 
-    private bool OverlapsWithElement(Vector2 _mousePos, out IInteractable interactable)
+    private bool OverlapsWithElement(Vector2 _mousePos, out IInteractable _interactable)
     {
-        interactable = null;
+        _interactable = null;
         foreach (var element in subscribedElements)
         {
             if (!element.Value.Overlaps(_mousePos)) continue;
-            interactable = element.Value;
+            _interactable = element.Value;
             return true;
         }
         return false;

@@ -41,10 +41,10 @@ public class Tile
     #endregion
 
     #region Checks
-    public bool CompareType(ItemData type) => contents.Item == type;
+    public bool CompareType(ItemData _type) => contents.Item == _type;
 
-    public bool CompareType(Tile other) => contents.Item == other.contents.Item;
+    public bool CompareType(Tile _other) => contents.Item == _other.contents.Item;
 
-    public bool Contains(int amount) => contents.Amount >= amount;
+    public bool Contains(int _amount) => contents.Amount >= _amount;
     #endregion
 }

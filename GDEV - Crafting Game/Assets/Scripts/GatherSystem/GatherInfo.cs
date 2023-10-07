@@ -13,17 +13,16 @@ public class GatherInfo
     {
         foreach (var currentGatherItem in gatherComponent.gatherItems)
         {
-            if (gatherItems.ContainsKey(currentGatherItem.key))
+            if (gatherItems.ContainsKey(currentGatherItem.Key))
             {
-                GatherChance gatherChance = gatherItems[currentGatherItem.key];
-                gatherChance.gatherChancePercentage += currentGatherItem.value.gatherChancePercentage;
-                gatherItems[currentGatherItem.key] = gatherChance;
+                GatherChance gatherChance = gatherItems[currentGatherItem.Key];
+                gatherChance.gatherChancePercentage += currentGatherItem.Value.gatherChancePercentage;
+                gatherItems[currentGatherItem.Key] = gatherChance;
             }
             else
             {
-                gatherItems.Add(currentGatherItem.key, currentGatherItem.value);
+                gatherItems.Add(currentGatherItem.Key, currentGatherItem.Value);
             }
         }
     }
 }
-

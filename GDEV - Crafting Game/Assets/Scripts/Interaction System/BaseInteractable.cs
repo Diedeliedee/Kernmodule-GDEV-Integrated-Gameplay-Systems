@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseInteractable : IInteractable
 {
     protected RectTransform element = null;
 
-    public BaseInteractable(RectTransform _element)
+    public BaseInteractable() { }
+    public BaseInteractable(RectTransform _element) => Setup(_element);
+
+    public void Setup(RectTransform _element)
     {
         element = _element;
         ServiceLocator.Instance.Get<InteractionManager>().Subscribe(this, _element);

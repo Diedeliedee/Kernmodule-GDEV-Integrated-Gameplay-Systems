@@ -268,6 +268,7 @@ MonoBehaviour:
   baseGatherComponent: {fileID: 11400000, guid: dd70abc43a9f27f48a1d700c0be1d02f, type: 2}
   recipeUIParent: {fileID: 1757691495}
   craftingQueueUIParent: {fileID: 974523917}
+  craftingSystemToolTip: {fileID: 1329813438}
   craftingQueueProgressBar: {fileID: 1055955570}
   inventoryRoot: {fileID: 1496940002}
 --- !u!4 &1130079491
@@ -287,6 +288,11 @@ Transform:
   - {fileID: 1355483486}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1329813438 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1203792382047470716, guid: 8172387e0b1441a499704498f35c6504, type: 3}
+  m_PrefabInstance: {fileID: 6281223657189472237}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1355483485
 GameObject:
   m_ObjectHideFlags: 0

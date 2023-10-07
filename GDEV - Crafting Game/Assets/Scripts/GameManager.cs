@@ -9,33 +9,41 @@ public class GameManager : MonoBehaviour
     [Header("Crafting System")]
     [SerializeField] private RectTransform recipeUIParent;
     [SerializeField] private RectTransform craftingQueueUIParent;
+    [SerializeField] private RectTransform craftingSystemToolTip;
     [SerializeField] private Image craftingQueueProgressBar;
     
     [Header("Reference")]
     [SerializeField] private RectTransform inventoryRoot;
 
     private ServiceLocator serviceLocator = null;
+    private TickManager tickManager = null;
+
     private InteractionManager interactionManager =  null;
     private InventoryManager inventoryManager = null;
-    private TickManager tickManager = null;
-    
+    private GatherManager gatherManager = null;
+    private CraftingManager craftingManager = null;
 
     private void Awake()
     {
+        // Order is important : First ServiceLocator, Second TickManager and Third InteractionManager
         serviceLocator = new ServiceLocator();
-        interactionManager = new InteractionManager();
+        
         tickManager = new TickManager();
-        inventoryManager = new InventoryManager(inventoryRoot);
-
-        GatherManager gatherManager = new(baseGatherComponent);
-
         serviceLocator.Add(tickManager, typeof(ITickManager));
-        serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
-        serviceLocator.Add(gatherManager, typeof(IGatherManager));
 
-        tickManager.Add(gatherManager);
-        tickManager.Add(new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar));
+        interactionManager = new InteractionManager();
+        serviceLocator.Add(interactionManager, typeof(InteractionManager));
         tickManager.Add(interactionManager);
+
+        inventoryManager = new InventoryManager(inventoryRoot);
+        serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
+
+        gatherManager = new GatherManager(baseGatherComponent);
+        serviceLocator.Add(gatherManager, typeof(IGatherManager));
+        tickManager.Add(gatherManager);
+
+        craftingManager = new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingSystemToolTip, craftingQueueProgressBar);
+        tickManager.Add(craftingManager);
     }
 
     private void Start()
