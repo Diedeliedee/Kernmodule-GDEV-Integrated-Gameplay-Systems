@@ -5,13 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class SerializableKeyValuePair<Tkey, TValue>
 {
-    public Tkey key;
-    public TValue value;
+    public Tkey Key;
+    public TValue Value;
 
-    public SerializableKeyValuePair(Tkey key, TValue value)
+    public SerializableKeyValuePair(Tkey _key, TValue _value)
     {
-        this.key = key;
-        this.value = value;
+        Key = _key;
+        Value = _value;
     }
 }
 
@@ -28,7 +28,7 @@ public class SerializableDictionary<TKey, TValue> : IEnumerable<SerializableKeyV
             List<TKey> keys = new();
             foreach (SerializableKeyValuePair<TKey, TValue> pair in pairs)
             {
-                keys.Add(pair.key);
+                keys.Add(pair.Key);
             }
 
             return keys;
@@ -41,72 +41,72 @@ public class SerializableDictionary<TKey, TValue> : IEnumerable<SerializableKeyV
             List<TValue> values = new();
             foreach (SerializableKeyValuePair<TKey, TValue> pair in pairs)
             {
-                values.Add(pair.value);
+                values.Add(pair.Value);
             }
 
             return values;
         }
     }
 
-    public TValue this[TKey key]
+    public TValue this[TKey _key]
     {
-        get { return GetValue(key); }
-        set { SetValue(key, value); }
+        get { return GetValue(_key); }
+        set { SetValue(_key, value); }
     }
 
-    public void Add(TKey key, TValue value)
+    public void Add(TKey _key, TValue _value)
     {
-        pairs.Add(new SerializableKeyValuePair<TKey, TValue>(key, value));
+        pairs.Add(new SerializableKeyValuePair<TKey, TValue>(_key, _value));
     }
 
-    public void Remove(TKey key)
+    public void Remove(TKey _key)
     {
-        int index = Keys.IndexOf(key);
+        int index = Keys.IndexOf(_key);
         pairs.RemoveAt(index);
     }
 
-    public TValue GetValue(TKey getKey)
+    public TValue GetValue(TKey _getKey)
     {
         foreach (TKey key in Keys)
         {
-            if (EqualityComparer<TKey>.Default.Equals(key, getKey))
+            if (EqualityComparer<TKey>.Default.Equals(key, _getKey))
             {
-                return pairs[Keys.IndexOf(key)].value;
+                return pairs[Keys.IndexOf(key)].Value;
             }
         }
 
         return default;
     }
 
-    public void SetValue(TKey getKey, TValue setValue)
+    public void SetValue(TKey _getKey, TValue _setValue)
     {
         foreach (TKey key in Keys)
         {
-            if (EqualityComparer<TKey>.Default.Equals(key, getKey))
+            if (EqualityComparer<TKey>.Default.Equals(key, _getKey))
             {
-                pairs[Keys.IndexOf(key)].value = setValue;
+                pairs[Keys.IndexOf(key)].Value = _setValue;
             }
         }
     }
 
-    public TKey GetKey(TValue getValue)
+    public TKey GetKey(TValue _getValue)
     {
         foreach (TValue value in Values)
         {
-            if (EqualityComparer<TValue>.Default.Equals(value, getValue))
+            if (EqualityComparer<TValue>.Default.Equals(value, _getValue))
             {
-                return pairs[Values.IndexOf(value)].key;
+                return pairs[Values.IndexOf(value)].Key;
             }
         }
 
         return default;
     }
 
-    public bool ContainsKey(TKey compareKey)
+    public bool ContainsKey(TKey _compareKey)
     {
         foreach (TKey key in Keys)
         {
-            if (EqualityComparer<TKey>.Default.Equals(key, compareKey))
+            if (EqualityComparer<TKey>.Default.Equals(key, _compareKey))
             {
                 return true;
             }
@@ -115,11 +115,11 @@ public class SerializableDictionary<TKey, TValue> : IEnumerable<SerializableKeyV
         return false;
     }
 
-    public bool ContainsValue(TValue compareValue)
+    public bool ContainsValue(TValue _compareValue)
     {
         foreach (TValue value in Values)
         {
-            if (EqualityComparer<TValue>.Default.Equals(value, compareValue))
+            if (EqualityComparer<TValue>.Default.Equals(value, _compareValue))
             {
                 return true;
             }
@@ -139,7 +139,7 @@ public class SerializableDictionary<TKey, TValue> : IEnumerable<SerializableKeyV
 
         foreach (SerializableKeyValuePair<TKey, TValue> pair in pairs)
         {
-            dictionary.Add(pair.key, pair.value);
+            dictionary.Add(pair.Key, pair.Value);
         }
 
         return dictionary;

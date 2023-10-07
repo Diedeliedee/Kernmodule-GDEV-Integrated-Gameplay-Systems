@@ -8,38 +8,38 @@ public class GridInventory : IInventory
     {
         Items = new Tile[_width, _height];
 
-        bool OnIterate(int x, int y)
+        bool OnIterate(int _x, int _y)
         {
-            Items[x, y] = new Tile();
+            Items[_x, _y] = new Tile();
             return false;
         }
 
         Loop(OnIterate);
     }
 
-    public void Add(params ItemStack[] itemStacks)
+    public void Add(params ItemStack[] _itemStacks)
     {
         //  Iterate through every item stack.
-        foreach (var itemStack in itemStacks)
+        foreach (var itemStack in _itemStacks)
         {
             //  Iterate through every slot.
-            bool OnIterate(int x, int y)
+            bool OnIterate(int _x, int _y)
             {
                 //  If the grid in the slot is occupied..
-                if (Items[x, y].HasContents)
+                if (Items[_x, _y].HasContents)
                 {
                     //  Keep looping if it isn't the same type as the passed in item stack.
-                    if (!Items[x, y].CompareType(itemStack.Item)) return false;
+                    if (!Items[_x, _y].CompareType(itemStack.Item)) return false;
 
                     //  Otherwise, add to the value of the stack.
-                    Items[x, y].ChangeValue(itemStack.Amount);
+                    Items[_x, _y].ChangeValue(itemStack.Amount);
                     return true;
                 }
 
                 //  Otherwise, set the empty slot to be the passed in item stack.
                 else
                 {
-                    Items[x, y].SetContents(itemStack);
+                    Items[_x, _y].SetContents(itemStack);
                     return true;
                 }
             }
@@ -48,18 +48,18 @@ public class GridInventory : IInventory
         }
     }
 
-    public bool Contains(params ItemStack[] itemStacks)
+    public bool Contains(params ItemStack[] _itemStacks)
     {
         var checksPassed = 0;
 
         //  Iterate through every item stack.
-        foreach (var itemStack in itemStacks)
+        foreach (var itemStack in _itemStacks)
         {
             //  Iterate through every slot.
-            bool OnIterate(int x, int y)
+            bool OnIterate(int _x, int _y)
             {
-                if (!Items[x, y].Contains(itemStack.Amount)) return false;  //  Keep looping if the slot has an insufficient amount.
-                if (!Items[x, y].CompareType(itemStack.Item)) return false; //  Keep looping if the data of the stack is not the same.
+                if (!Items[_x, _y].Contains(itemStack.Amount)) return false;  //  Keep looping if the slot has an insufficient amount.
+                if (!Items[_x, _y].CompareType(itemStack.Item)) return false; //  Keep looping if the data of the stack is not the same.
 
                 //  If the sufficient items of the type have been found, stop the loop, and confirm the check.
                 checksPassed++;
@@ -70,22 +70,22 @@ public class GridInventory : IInventory
         }
 
         //  Return true if the checks passed correspond with the amount of items to check.
-        return checksPassed == itemStacks.Length;
+        return checksPassed == _itemStacks.Length;
     }
 
-    public void Remove(params ItemStack[] itemStacks)
+    public void Remove(params ItemStack[] _itemStacks)
     {
         //  Iterate through every item stack.
-        foreach (var itemStack in itemStacks)
+        foreach (var itemStack in _itemStacks)
         {
             //  Iterate through every slot.
-            bool OnIterate(int x, int y)
+            bool OnIterate(int _x, int _y)
             {
                 //  Keep looping if the data of the stack is not the same.
-                if (!Items[x, y].CompareType(itemStack.Item)) return false;
+                if (!Items[_x, _y].CompareType(itemStack.Item)) return false;
 
                 //  If the item on the slot is of the same type than of the passed in stack, remove the amount.
-                Items[x, y].ChangeValue(-itemStack.Amount);
+                Items[_x, _y].ChangeValue(-itemStack.Amount);
                 return true;
             }
 
@@ -96,45 +96,45 @@ public class GridInventory : IInventory
     /// <summary>
     /// Add an item stack to the inventory at a specific slot.
     /// </summary>
-    public void SetAt(Vector2Int coordinates, ItemStack stack)
+    public void SetAt(Vector2Int _coordinates, ItemStack _stack)
     {
-        Items[coordinates.x, coordinates.y].SetContents(stack);
+        Items[_coordinates.x, _coordinates.y].SetContents(_stack);
     }
 
     /// <summary>
     /// Add an item stack to the inventory at a specific slot, and re-add whatever contents the stack may replace.
     /// </summary>
-    public void ReplaceAt(Vector2Int coordinates, ItemStack stack)
+    public void ReplaceAt(Vector2Int _coordinates, ItemStack _stack)
     {
-        var selectedTile = Items[coordinates.x, coordinates.y];
+        var selectedTile = Items[_coordinates.x, _coordinates.y];
 
         //  If the tile is empty, just set the contents.
         if (!selectedTile.HasContents)
         {
-            selectedTile.SetContents(stack);
+            selectedTile.SetContents(_stack);
             return;
         }
 
         //  If the tile is occupied, cache the contents, and re-add them to the inventory.
         var cachedContents = selectedTile.Contents;
 
-        selectedTile.SetContents(stack);
+        selectedTile.SetContents(_stack);
         Add(cachedContents);
     }
 
     /// <summary>
     /// Loops through the entire inventory, and call the 'onIterate' predicate every iteration.
     /// </summary>
-    private void Loop(Iteration onIterate, int xStart = 0, int yStart = 0)
+    private void Loop(Iteration _onIterate, int _xStart = 0, int _yStart = 0)
     {
-        for (int x = yStart; x < Items.GetLength(0); x++)
+        for (int x = _yStart; x < Items.GetLength(0); x++)
         {
-            for (int y = xStart; y < Items.GetLength(1); y++)
+            for (int y = _xStart; y < Items.GetLength(1); y++)
             {
-                if (onIterate(x, y)) return;
+                if (_onIterate(x, y)) return;
             }
         }
     }
 
-    private delegate bool Iteration(int x, int y);
+    private delegate bool Iteration(int _x, int _y);
 }

@@ -5,4 +5,3 @@ public class GatherComponent : ScriptableObject
 {
     public SerializableDictionary<ItemData, GatherChance> gatherItems;
 }
-

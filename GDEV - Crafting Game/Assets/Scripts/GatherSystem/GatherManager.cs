@@ -4,6 +4,7 @@ using UnityEngine;
 public class GatherManager : IUpdatable, IGatherManager
 {
     private IInventory inventory;
+
     private readonly List<GatherComponent> gatherComponents;
     private readonly GatherInfo gatherInfo;
 
@@ -11,6 +12,7 @@ public class GatherManager : IUpdatable, IGatherManager
     {
         gatherComponents = new List<GatherComponent>();
         gatherInfo = new GatherInfo();
+
         AddGatherComponent(_baseGatherComponent);
     }
 

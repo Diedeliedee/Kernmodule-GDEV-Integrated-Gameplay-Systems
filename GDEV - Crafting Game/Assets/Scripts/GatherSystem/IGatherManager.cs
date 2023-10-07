@@ -2,4 +2,3 @@
 {
     void AddGatherComponent(GatherComponent _gatherComponent);
 }
-

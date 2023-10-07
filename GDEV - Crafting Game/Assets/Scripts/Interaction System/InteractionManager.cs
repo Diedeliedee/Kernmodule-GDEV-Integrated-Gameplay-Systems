@@ -59,13 +59,13 @@ public class InteractionManager : IService, IUpdatable
         subscribedElements.Remove(_key.GetInstanceID());
     }
 
-    private bool OverlapsWithElement(Vector2 _mousePos, out IInteractable interactable)
+    private bool OverlapsWithElement(Vector2 _mousePos, out IInteractable _interactable)
     {
-        interactable = null;
+        _interactable = null;
         foreach (var element in subscribedElements)
         {
             if (!element.Value.Overlaps(_mousePos)) continue;
-            interactable = element.Value;
+            _interactable = element.Value;
             return true;
         }
         return false;

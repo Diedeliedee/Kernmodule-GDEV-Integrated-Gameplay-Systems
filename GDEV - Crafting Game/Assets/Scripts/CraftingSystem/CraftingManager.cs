@@ -5,11 +5,13 @@ using UnityEngine.UI;
 public class CraftingManager : IUpdatable
 {
     private IInventory inventory;
-    private List<CraftingRecipe> lockedRecipes;
+    private IGatherManager gatherManager;
 
-    private List<CraftingQueueObject> craftingQueue;
-    private List<UnlockedRecipeObject> unlockedRecipes;
-    private Image craftingQueueProgressSlider;
+    private readonly List<CraftingRecipe> lockedRecipes;
+
+    private readonly List<CraftingQueueObject> craftingQueue;
+    private readonly List<UnlockedRecipeObject> unlockedRecipes;
+    private readonly Image craftingQueueProgressSlider;
 
     private readonly GameObject recipeUIPrefab;
     private readonly RectTransform recipeUIParent;
@@ -19,7 +21,6 @@ public class CraftingManager : IUpdatable
     private readonly Sprite check;
     private readonly Sprite cross;
 
-    private IGatherManager gatherManager;
 
     public CraftingManager(RectTransform _recipeUIParent, RectTransform _craftingQueueUIParent, Image _craftingQueueProgressSlider)
     {
@@ -58,17 +59,17 @@ public class CraftingManager : IUpdatable
 
     public void OnUpdate() { }
 
-    public void QueueCraft(CraftingRecipe recipe)
+    public void QueueCraft(CraftingRecipe _recipe)
     {
-        if (!CanBeCrafted(recipe)) { return; }
+        if (!CanBeCrafted(_recipe)) { return; }
 
-        inventory.Remove(recipe.Input);
-        craftingQueue.Add(new CraftingQueueObject(recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
+        inventory.Remove(_recipe.Input);
+        craftingQueue.Add(new CraftingQueueObject(_recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
     }
 
-    private bool CanBeCrafted(CraftingRecipe recipe)
+    private bool CanBeCrafted(CraftingRecipe _recipe)
     {
-        return inventory.Contains(recipe.Input);
+        return inventory.Contains(_recipe.Input);
     }
 
     private void CheckForRecipeUnlocks()
