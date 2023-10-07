@@ -12,6 +12,10 @@ public abstract class BaseInteractable : IInteractable
         ServiceLocator.Instance.Get<InteractionManager>().Subscribe(this, _element);
     }
 
+    public virtual void OnExit(Vector2 _mousePos) { }
+
+    public virtual void OnEnter(Vector2 _mousePos) { }
+
     public virtual void OnClick(Vector2 _mousePos) { }
 
     public virtual void OnRelease(Vector2 _mousePos) { }
@@ -25,8 +29,8 @@ public abstract class BaseInteractable : IInteractable
         var pos = element.position;
         var size = element.sizeDelta;
 
-        var overlapX = _mousePos.x >= pos.x - size.x && _mousePos.x <= pos.x + size.x;
-        var overlapY = _mousePos.y >= pos.y - size.y && _mousePos.y <= pos.y + size.y;
+        var overlapX = _mousePos.x >= pos.x - (size.x / 2) && _mousePos.x <= pos.x + (size.x / 2);
+        var overlapY = _mousePos.y >= pos.y - (size.y / 2) && _mousePos.y <= pos.y + (size.y / 2);
 
         return overlapX && overlapY;
     }

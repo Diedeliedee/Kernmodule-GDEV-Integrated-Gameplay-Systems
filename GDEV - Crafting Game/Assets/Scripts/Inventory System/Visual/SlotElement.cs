@@ -28,6 +28,16 @@ public class SlotElement : BaseInteractable
         itemText.enabled = false;
     }
 
+    public override void OnEnter(Vector2 _mousePos)
+    {
+        Debug.Log($"Je hebt {element.gameObject.name} benadert!!.");
+    }
+
+    public override void OnExit(Vector2 _mousePos)
+    {
+        Debug.Log($"Je hebt {element.gameObject.name} verlaten!!.");
+    }
+
     public override void OnClick(Vector2 _mousePos)
     {
         Debug.Log($"Hallooo! Je hebt geklikt op {element.gameObject.name}.");
