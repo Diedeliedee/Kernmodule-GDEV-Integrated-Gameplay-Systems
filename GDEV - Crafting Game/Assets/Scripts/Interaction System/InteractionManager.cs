@@ -43,7 +43,7 @@ public class InteractionManager : IService, IUpdatable
         {
             clickedElement.OnClick(mousePos);
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (clickedElement != null && Input.GetMouseButtonUp(0))
         {
             clickedElement.OnRelease(mousePos);
             clickedElement = null;
