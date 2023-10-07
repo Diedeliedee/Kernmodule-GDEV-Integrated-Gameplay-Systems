@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     [Header("Crafting System")]
     [SerializeField] private RectTransform recipeUIParent;
     [SerializeField] private RectTransform craftingQueueUIParent;
+    [SerializeField] private RectTransform craftingSystemToolTip;
     [SerializeField] private Image craftingQueueProgressBar;
     
     [Header("Reference")]
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(gatherManager, typeof(IGatherManager));
         tickManager.Add(gatherManager);
 
-        craftingManager = new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar);
+        craftingManager = new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingSystemToolTip, craftingQueueProgressBar);
         tickManager.Add(craftingManager);
     }
 
