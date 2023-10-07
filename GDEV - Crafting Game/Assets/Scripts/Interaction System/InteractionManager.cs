@@ -9,25 +9,11 @@ using UnityEngine.EventSystems;
 
 public class InteractionManager : IService, IUpdatable
 {
-    private readonly Canvas canvas = null;
-    private readonly Camera camera = null;
-    private readonly EventSystem eventSystem = null;
-    private readonly GraphicRaycaster raycaster = null;
-
-    private readonly InteractionSettings settings = null;
-
     private Dictionary<int, IInteractable> subscribedElements = new();
     private IInteractable selectedElement = null;
 
-    public InteractionManager(Canvas _canvas)
+    public InteractionManager()
     {
-        canvas = _canvas;
-        camera = Camera.main;
-        eventSystem = EventSystem.current;
-        raycaster = canvas.GetComponent<GraphicRaycaster>();
-
-        settings = Resources.Load<InteractionSettings>("Settings/Interaction");
-
         ServiceLocator.Instance.Add(this);
     }
 
@@ -37,28 +23,22 @@ public class InteractionManager : IService, IUpdatable
 
     public void OnUpdate()
     {
-        PointerEventData pointerData;
-
         void ClickOnElement()
         {
-            var resultList = new List<RaycastResult>();
-
-            raycaster.Raycast(pointerData, resultList);
-            foreach (var hit in resultList)
+            foreach (var element in subscribedElements)
             {
-                if (!subscribedElements.TryGetValue(hit.gameObject.transform.GetInstanceID(), out selectedElement)) continue;
-                selectedElement.OnClick(Input.mousePosition);
+                if (!element.Value.Overlaps(Input.mousePosition)) continue;
+                element.Value.OnClick(Input.mousePosition);
+                selectedElement = element.Value;
+                return;
             }
         }
 
         void ReleaseElement()
         {
-            selectedElement.OnRelease(pointerData.position);
+            selectedElement.OnRelease(Input.mousePosition);
             selectedElement = null;
         }
-
-        pointerData = new PointerEventData(eventSystem);
-        pointerData.position = Input.mousePosition;
 
         if (selectedElement == null)
         {

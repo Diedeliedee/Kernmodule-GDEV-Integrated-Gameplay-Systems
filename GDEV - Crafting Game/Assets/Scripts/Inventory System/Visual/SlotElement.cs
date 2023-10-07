@@ -8,21 +8,29 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class SlotElement
+public class SlotElement : BaseInteractable
 {
     private readonly Tile connectedTile = null;
 
     private readonly Image itemImage = null;
     private readonly TextMeshProUGUI itemText = null;
 
-    public SlotElement(RectTransform _transform, Tile _connectedTile)
+    public SlotElement(RectTransform _transform, Tile _connectedTile) : base(_transform)
     {
         connectedTile = _connectedTile;
 
         itemImage = _transform.GetChild(0).GetComponent<Image>();
-        itemText = _transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        itemText = itemImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         connectedTile.OnAltered += OnTileAltered;
+
+        itemImage.enabled = false;
+        itemText.enabled = false;
+    }
+
+    public override void OnClick(Vector2 _mousePos)
+    {
+        Debug.Log($"Hallooo! Je hebt geklikt op {element.gameObject.name}.");
     }
 
     private void OnTileAltered(ItemStack _stack)

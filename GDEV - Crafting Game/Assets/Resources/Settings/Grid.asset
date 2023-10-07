@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Grid
   m_EditorClassIdentifier: 
   resolution: {x: 6, y: 6}
+  spacing: 10

@@ -15,13 +15,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform inventoryRoot;
 
     private ServiceLocator serviceLocator = null;
+    private InteractionManager interactionManager =  null;
     private InventoryManager inventoryManager = null;
     private TickManager tickManager = null;
+    
 
     private void Awake()
     {
         serviceLocator = new ServiceLocator();
-
+        interactionManager = new InteractionManager();
         tickManager = new TickManager();
         inventoryManager = new InventoryManager(inventoryRoot);
 
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
 
         tickManager.Add(gatherManager);
         tickManager.Add(new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar));
+        tickManager.Add(interactionManager);
     }
 
     private void Start()
