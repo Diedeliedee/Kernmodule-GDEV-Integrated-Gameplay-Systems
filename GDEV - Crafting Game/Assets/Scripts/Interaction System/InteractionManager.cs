@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class InteractionManager : IService, IUpdatable
 {
-    private Dictionary<int, IInteractable> subscribedElements = new();
+    private readonly Dictionary<int, IInteractable> subscribedElements = new();
 
     private IInteractable clickedElement = null;
     private IInteractable hoveringElement = null;
-
-    public InteractionManager()
-    {
-        ServiceLocator.Instance.Add(this);
-    }
 
     public void OnFixedUpdate() { }
 

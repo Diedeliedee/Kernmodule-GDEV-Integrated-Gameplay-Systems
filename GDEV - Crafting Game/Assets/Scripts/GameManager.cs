@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private InteractionManager interactionManager =  null;
     private InventoryManager inventoryManager = null;
     private TickManager tickManager = null;
+    private GatherManager gatherManager = null;
     
 
     private void Awake()
@@ -26,12 +27,12 @@ public class GameManager : MonoBehaviour
         interactionManager = new InteractionManager();
         tickManager = new TickManager();
         inventoryManager = new InventoryManager(inventoryRoot);
-
-        GatherManager gatherManager = new(baseGatherComponent);
+        gatherManager = new GatherManager(baseGatherComponent);
 
         serviceLocator.Add(tickManager, typeof(ITickManager));
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
         serviceLocator.Add(gatherManager, typeof(IGatherManager));
+        serviceLocator.Add(interactionManager, typeof(InteractionManager));
 
         tickManager.Add(gatherManager);
         tickManager.Add(new CraftingManager(recipeUIParent, craftingQueueUIParent, craftingQueueProgressBar));
