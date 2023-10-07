@@ -25,7 +25,7 @@ public class InventoryManager
 
     private SlotElement[,] InstantiateGrid(Vector2Int _gridRes, Vector2 _gridSize, Tile[,] tiles)
     {
-        var slotSize = new Vector2(_gridSize.x / _gridRes.x, _gridSize.y / _gridRes.y);
+        var slotSize = new Vector2((_gridSize.x / _gridRes.x) - settings.Spacing, (_gridSize.y / _gridRes.y) - settings.Spacing);
         var grid = new SlotElement[_gridRes.x, _gridRes.y];
 
         //  Loop two dimensionally.
@@ -40,7 +40,7 @@ public class InventoryManager
                 //  Alter transform of the slot.
                 createdSlot.name = $"Grid Slot ({x}, {y})";
                 transform.sizeDelta = slotSize;
-                transform.anchoredPosition = new Vector2((float)x / settings.Resolution.x * root.sizeDelta.x, -(float)y / settings.Resolution.y * root.sizeDelta.y);
+                transform.anchoredPosition = new Vector2(((float)x / settings.Resolution.x * root.sizeDelta.x) + settings.Spacing / 2, -((float)y / settings.Resolution.y * root.sizeDelta.y) - settings.Spacing / 2);
 
                 //  Create slot elements.
                 grid[x, y] = new SlotElement(transform, tiles[x, y]);

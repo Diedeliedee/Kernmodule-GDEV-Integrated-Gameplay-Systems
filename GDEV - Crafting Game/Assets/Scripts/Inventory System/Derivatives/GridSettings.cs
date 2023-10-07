@@ -4,6 +4,8 @@
 public class GridSettings : ScriptableObject
 {
     [SerializeField] private Vector2Int resolution;
+    [SerializeField] private float spacing;
 
     public Vector2Int Resolution => resolution;
+    public float Spacing => spacing;
 }
