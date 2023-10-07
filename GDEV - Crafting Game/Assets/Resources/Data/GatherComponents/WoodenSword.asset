@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherItems:
     pairs:
-    - key: {fileID: 11400000, guid: 12715356e0699934ebc3a520e44579e9, type: 2}
-      value:
-        gatherChancePercentage: 2
-        maxStackSize: 2
-    - key: {fileID: 11400000, guid: ec869eff3c63a784dbda03e97e54a5f6, type: 2}
-      value:
-        gatherChancePercentage: 1
+    - Key: {fileID: 11400000, guid: 12715356e0699934ebc3a520e44579e9, type: 2}
+      Value:
+        gatherChancePercentage: 0.5
+        maxStackSize: 1
+    - Key: {fileID: 11400000, guid: ec869eff3c63a784dbda03e97e54a5f6, type: 2}
+      Value:
+        gatherChancePercentage: 0.5
         maxStackSize: 1
