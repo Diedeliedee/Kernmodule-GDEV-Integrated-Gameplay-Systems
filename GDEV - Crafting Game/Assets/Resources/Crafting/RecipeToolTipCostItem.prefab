@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 5001659226894753175}
   - component: {fileID: 3815539197271172481}
   m_Layer: 0
-  m_Name: ToolTipCostItem
+  m_Name: RecipeToolTipCostItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

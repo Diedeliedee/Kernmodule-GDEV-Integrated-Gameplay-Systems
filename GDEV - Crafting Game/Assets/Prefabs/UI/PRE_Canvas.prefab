@@ -216,7 +216,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 280564897906958498, guid: b92c18ab98371854abc540e8687aec19, type: 3}
       propertyPath: m_Name
-      value: ToolTip
+      value: RecipeToolTip
       objectReference: {fileID: 0}
     - target: {fileID: 280564897906958498, guid: b92c18ab98371854abc540e8687aec19, type: 3}
       propertyPath: m_IsActive
@@ -403,6 +403,14 @@ PrefabInstance:
     - target: {fileID: 1608815026183354521, guid: ab2e82eacbe9b624ebb0fd7b5da65e0d, type: 3}
       propertyPath: m_Name
       value: Crafting System
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084747221169385927, guid: ab2e82eacbe9b624ebb0fd7b5da65e0d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -41.9049
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084747221169385927, guid: ab2e82eacbe9b624ebb0fd7b5da65e0d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000091552734
       objectReference: {fileID: 0}
     - target: {fileID: 7621489384494749160, guid: ab2e82eacbe9b624ebb0fd7b5da65e0d, type: 3}
       propertyPath: m_SizeDelta.y

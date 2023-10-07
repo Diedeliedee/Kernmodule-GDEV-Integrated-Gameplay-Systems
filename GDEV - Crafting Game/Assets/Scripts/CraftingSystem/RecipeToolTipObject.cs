@@ -20,7 +20,7 @@ public class RecipeToolTipObject : BaseUpdatable
         costListParent = (RectTransform)toolTipTransform.GetChild(1);
         durationText = toolTipTransform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
         
-        costListItem = Resources.Load<GameObject>("Crafting/ToolTipCostItem");
+        costListItem = Resources.Load<GameObject>("Crafting/RecipeToolTipCostItem");
     }
     public override void OnUpdate()
     {
