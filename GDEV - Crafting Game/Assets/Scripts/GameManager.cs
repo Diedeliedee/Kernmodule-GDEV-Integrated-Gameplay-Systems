@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject endScreen;
     [SerializeField] private ItemData winningItem;
+    [SerializeField] private VisualEffect winEffect;
 
     private ServiceLocator serviceLocator = null;
     private TickManager tickManager = null;
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
     {
         startScreen.SetActive(false);
         isRunning = true;
+        winEffect.Play();
         tickManager.OnStart();
     }
 }
