@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class BaseInteractable : IInteractable
 {
-    protected InteractionManager interactionManager = null;
+    protected IInteractionManager interactionManager = null;
     protected RectTransform element = null;
 
     public BaseInteractable() { }
@@ -10,7 +10,7 @@ public abstract class BaseInteractable : IInteractable
 
     public void Setup(RectTransform _element)
     {
-        interactionManager = ServiceLocator.Instance.Get<InteractionManager>();
+        interactionManager = ServiceLocator.Instance.Get<IInteractionManager>();
         element = _element;
 
         interactionManager.Subscribe(this, _element);
