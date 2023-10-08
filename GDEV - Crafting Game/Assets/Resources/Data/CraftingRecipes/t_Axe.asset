@@ -21,6 +21,6 @@ MonoBehaviour:
     Amount: 1
   output:
     Item: {fileID: 11400000, guid: 9d8e3bf4ae4e8c84595deff15a6a1917, type: 2}
-    Amount: 0
+    Amount: 1
   gatherComponet: {fileID: 11400000, guid: d63a6a9e20bf2d84dac3bfc412f302d7, type: 2}
-  duration: 0
+  duration: 1

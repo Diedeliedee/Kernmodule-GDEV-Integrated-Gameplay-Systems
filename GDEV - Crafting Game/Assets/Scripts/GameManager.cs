@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,7 +19,10 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject endScreen;
+    [SerializeField] private GameObject inventoryUIObject;
+    [SerializeField] private GameObject craftingUIObject;
     [SerializeField] private ItemData winningItem;
+    [SerializeField] private VisualEffect winEffect;
 
     private ServiceLocator serviceLocator = null;
     private TickManager tickManager = null;
@@ -58,6 +62,11 @@ public class GameManager : MonoBehaviour
     {
         if (!isRunning) { return; }
         tickManager.OnUpdate();
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            inventoryManager.Inventory.Add(new ItemStack(winningItem, 1));
+        }
     }
 
     private void FixedUpdate()
@@ -69,6 +78,9 @@ public class GameManager : MonoBehaviour
         {
             isRunning = false;
             endScreen.SetActive(true);
+            craftingUIObject.SetActive(false);
+            inventoryUIObject.SetActive(false);
+            winEffect.Play();
         }
     }
 
