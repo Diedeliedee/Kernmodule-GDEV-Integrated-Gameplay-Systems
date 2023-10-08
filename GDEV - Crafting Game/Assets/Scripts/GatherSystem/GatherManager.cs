@@ -27,7 +27,7 @@ public class GatherManager : BaseUpdatable, IGatherManager
 
         foreach (KeyValuePair<ItemData, GatherChance> gatherItem in gatherInfo.gatherItems)
         {
-            float randomPercentage = Random.Range(0.00001f, 100.0f);
+            float randomPercentage = Random.Range(0.0f, 100.0f);
 
             if (randomPercentage < gatherItem.Value.gatherChancePercentage)
             {
