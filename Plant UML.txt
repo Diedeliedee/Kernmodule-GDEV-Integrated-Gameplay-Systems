@@ -171,7 +171,7 @@ package "Inventory System"
     -InstantiateGrid(_gridRes : Vector2Int, _gridSize : Vector2Int, tiles : Tile[,])
   }
   
-  interface IInventory
+  interface IInventory <<Service>>
   {
     +Add(itemStack : params ItemStack[]) : void
     +Remove(itemStack : params ItemStack[]) : void
@@ -190,7 +190,7 @@ package "Inventory System"
     +Amount : int
   }
   
-  class GridInventory <<Service>> implements IInventory
+  class GridInventory implements IInventory
   {
     -itemGrid : Tile[]
   }
@@ -253,8 +253,11 @@ package "Interaction System"
 
   interface IInteractable
   {
+    +OnEnter(mousePos : Vector2) : void
+    +OnExit(mousePos : Vector2) : void
     +OnClick(mousePos : Vector2) : void
     +OnRelease(mousePos : Vector2) : void
+    +Overlaps(mousePos : Vector2) : bool
   }
 
   class InteractionManager <<Updatable>> implements IInteractionManager
@@ -263,12 +266,14 @@ package "Interaction System"
     -subscribedElements : Dictionary<RectTransform, IInteractable>
     -clickedElement : IInteractable
     -hoveringElement : IInteractable
+    -OverlapsWithElement(mousePos : Vector2, out interactable : IInteractable) : void
   }
   
   abstract class BaseInteractable implements IInteractable
   {
     -element : RectTransform
-    +BaseInteractable()
+    +Setup(element : RectTransform) : void
+    +DisconnectInteractable() : void
   }
   
   class CanvasTranslator
@@ -277,6 +282,7 @@ package "Interaction System"
     +ScreenToCanvasPoint(point : Vector2) : Vector2
   }
   
+  GameManager *-- IInteractionManager
   InteractionManager *-- CanvasTranslator
   InteractionManager o.. IInteractable
 }
