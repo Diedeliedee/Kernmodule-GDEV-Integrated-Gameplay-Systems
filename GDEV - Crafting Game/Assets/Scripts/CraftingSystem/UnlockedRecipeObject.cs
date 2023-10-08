@@ -1,5 +1,4 @@
-﻿using TMPro;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
 

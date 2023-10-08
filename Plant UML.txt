@@ -14,9 +14,10 @@ package "Service Locator"
 {
   class ServiceLocator
   {
+    +Instance : ServiceLocator
     -services : Dictionary<Type, IService>
-    +Add(...) : void
-    +Remove(...) : void
+    +Add(service : IService, key : Type) : void
+    +Remove(key : Type) : void
     +Get<T>() : void
   }
   
@@ -28,41 +29,71 @@ package "Service Locator"
 
 package "Tick System"
 {
-  class TickManager
+  interface ITickManager <<Service>> 
   {
-    -subscribed : List<IUpdatable> 
+    +Add(updatable : IUpdatable) : void
+    +Remove(updatable : IUpdatable) : void
+  }
+
+  class TickManager implements ITickManager
+  {
+    -subscribedObjects : List<IUpdatable> 
+    +OnStart() : void
     +OnUpdate() : void
-    +Add<T>(updatable : T) : T
+    +OnFixedUpdate() : void
   }
   
-  interface IUpdatable
+  interface IUpdatable 
+  {
+    +OnStart() : void
+    +OnUpdate() : void
+    +OnFixedUpdate() : void
+  }
   
-  GameManager *-- TickManager
+  abstract class BaseInteractable
+  
+  GameManager *-- ITickManager
   TickManager o.. IUpdatable
+  IUpdatable <-- BaseInteractable
 }
 
 package "Gathering System"
 {
-  class GatherManager <<Updatable>>
+  interface IGatherManager <<Service>> 
   {
-    -gatherInfo : GatherInfo
+    +AddGatherComponent(gatherComponent : GatherComponent) : void
+  }
+
+  class GatherManager <<Updatable>> implements IGatherManager 
+  {
     -inventory : IInventory
+    -gatherInfo : GatherInfo
+    -gatherComponents : List<gatherComponent>
   }
 
   class GatherInfo
   {
-    -gatherItems : Dictionary<ItemData, GatherChance>
+    +gatherItems : Dictionary<ItemData, GatherChance>
+    +Decorate(gatherComponent : GatherComponent) : void
   }
+  
+  class GatherComponent <<ScriptableObject>> 
+  {
+    + gatherItems : Dictionary<ItemData, GatherChance>
+  }
+  
   
   struct GatherChance
   {
     +gatherChancePercentage : float
     +maxStackSize : int
   }
-
-  GameManager *-- GatherManager
+  
+  GameManager *-- IGatherManager
   GatherManager *-- GatherInfo
+  GatherManager *-- GatherComponent
   GatherInfo o-- GatherChance
+  GatherComponent o-- GatherChance
 }
 
 package "Crafting System"
@@ -70,25 +101,63 @@ package "Crafting System"
   class CraftingManager <<Updatable>>
   {
     -inventory : IInventory
+    -gatherManager : IGatherManager
     -lockedRecipes : List<CraftingRecipe>
     -unlockedRecipes : List<CraftingRecipe>
-    -recipeQueue : Que<CraftingRecipe>
-    +CanBeCrafted(recipe : CraftingRecipe) : bool
+    -craftingQueue : List<CraftingRecipe>
+    -craftingQueueProgressSlider : Image
+    -toolTip : RecipeToolTipObject
     +QueueCraft(recipe : CraftingRecipe) : void
-    +Craft(recipe : CraftingRecipe) : void
-    +CheckForRecipeUnlocks()
+    +DequeueCraft(craftingQueueObject : CraftingQueueObject) : void
+    -CanBeCrafted(recipe : CraftingRecipe) : bool
+    -CheckForRecipeUnlocks() : void
+    -UpdateCraftingQueue() : void
+    -UpdateUnlockedRecipes() : void
   }
-
+  
   class CraftingRecipe <<ScriptableObject>>
   {
     +Input : itemStack[]
-    +Output : itemStack[]
-    +Duration : int
+    +Output : itemStack
+    +GatherComponent : GatherComponent
+    +Duration : float
+  }
   
+  class CraftingQueueObject <<Interactable>> 
+  {
+    +Recipe : CraftingRecipe
+    +PassedTime : float
+    -connectedGameObject : GameObject
+    -onClick : Action
+    +Destroy()
+  }
+  
+  class UnlockedRecipeObject <<Interactable>>
+  {
+    +Recipe : CraftingRecipe
+    -connectedGameObject : GameObject
+    -toolTip : RecipeToolTipObject
+    +SetIsCraftable(isCraftable : bool) : void
+  }
+  
+  class RecipeToolTipObject <<Updatable>> 
+  {
+    -toolTipTransform : RectTransform
+    -costListParent : RectTransform
+    -durationText : TextMeshProUGUI
+    -headerText : TextMeshProUGUI
+    -costListItem : GameObject
+    -toolTipOffset : Vector3
+    +SetActive(value : bool) : void
+    +SetRecipe(recipe : CraftingRecipe) : void
   }
   
   GameManager *-- CraftingManager
   CraftingManager o-- CraftingRecipe
+  CraftingManager *-- UnlockedRecipeObject
+  CraftingManager *-- CraftingQueueObject
+  CraftingManager *-- RecipeToolTipObject
+  CraftingQueueObject o-- RecipeToolTipObject
 }
 
 package "Inventory System"

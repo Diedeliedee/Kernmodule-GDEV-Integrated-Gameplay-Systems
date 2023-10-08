@@ -12,9 +12,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform craftingSystemToolTip;
     [SerializeField] private Image craftingQueueProgressBar;
     
-    [Header("Reference")]
-    [SerializeField] private Canvas canvas;
+    [Header("Inventory System")]
     [SerializeField] private RectTransform inventoryRoot;
+    
+    [Header("References")]
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private GameObject endScreen;
+    [SerializeField] private ItemData winningItem;
 
     private ServiceLocator serviceLocator = null;
     private TickManager tickManager = null;
@@ -23,6 +27,8 @@ public class GameManager : MonoBehaviour
     private InventoryManager inventoryManager = null;
     private GatherManager gatherManager = null;
     private CraftingManager craftingManager = null;
+
+    private bool isRunning = false;
 
     private void Awake()
     {
@@ -33,7 +39,7 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(tickManager, typeof(ITickManager));
 
         interactionManager = new InteractionManager(canvas);
-        serviceLocator.Add(interactionManager, typeof(InteractionManager));
+        serviceLocator.Add(interactionManager, typeof(IInteractionManager));
         tickManager.Add(interactionManager);
 
         inventoryManager = new InventoryManager(inventoryRoot);
@@ -48,18 +54,28 @@ public class GameManager : MonoBehaviour
         tickManager.Add(craftingManager);
     }
 
-    private void Start()
-    {
-        tickManager.OnStart();
-    }
-
     private void Update()
     {
+        if (!isRunning) { return; }
         tickManager.OnUpdate();
     }
 
     private void FixedUpdate()
     {
+        if (!isRunning) { return; }
         tickManager.OnFixedUpdate();
+
+        if (inventoryManager.Inventory.Contains(new ItemStack(winningItem, 1)))
+        {
+            isRunning = false;
+            endScreen.SetActive(true);
+        }
+    }
+
+    public void StartGame(GameObject startScreen)
+    {
+        startScreen.SetActive(false);
+        isRunning = true;
+        tickManager.OnStart();
     }
 }

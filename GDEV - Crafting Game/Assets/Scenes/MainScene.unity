@@ -270,8 +270,9 @@ MonoBehaviour:
   craftingQueueUIParent: {fileID: 974523917}
   craftingSystemToolTip: {fileID: 1329813438}
   craftingQueueProgressBar: {fileID: 1055955570}
-  canvas: {fileID: 2095646189}
   inventoryRoot: {fileID: 1496940002}
+  endScreen: {fileID: 1462334747366657297}
+  winningItem: {fileID: 11400000, guid: 9dc16f1005425b144a3ebdd01a274a85, type: 2}
 --- !u!4 &1130079491
 Transform:
   m_ObjectHideFlags: 0
@@ -405,9 +406,9 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2475716281667992503, guid: 8172387e0b1441a499704498f35c6504, type: 3}
   m_PrefabInstance: {fileID: 6281223657189472237}
   m_PrefabAsset: {fileID: 0}
---- !u!223 &2095646189 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 6726228678580020943, guid: 8172387e0b1441a499704498f35c6504, type: 3}
+--- !u!1 &1462334747366657297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5318722536436610662, guid: 8172387e0b1441a499704498f35c6504, type: 3}
   m_PrefabInstance: {fileID: 6281223657189472237}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6281223657189472237
@@ -418,6 +419,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1355483486}
     m_Modifications:
+    - target: {fileID: 1553491101037137709, guid: 8172387e0b1441a499704498f35c6504, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1130079490}
     - target: {fileID: 2475716281667992503, guid: 8172387e0b1441a499704498f35c6504, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0

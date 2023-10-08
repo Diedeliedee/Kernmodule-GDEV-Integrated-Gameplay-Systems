@@ -16,6 +16,11 @@ public abstract class BaseInteractable : IInteractable
         interactionManager.Subscribe(this, _element);
     }
 
+    public void DisconnectInteractable()
+    {
+        interactionManager.Unsubscribe(element);
+    }
+
     public virtual void OnExit(Vector2 _mousePos) { }
 
     public virtual void OnEnter(Vector2 _mousePos) { }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GatherManager : IUpdatable, IGatherManager
+public class GatherManager : BaseUpdatable, IGatherManager
 {
     private IInventory inventory;
 
@@ -16,18 +16,18 @@ public class GatherManager : IUpdatable, IGatherManager
         AddGatherComponent(_baseGatherComponent);
     }
 
-    public void OnStart()
+    public override void OnStart()
     {
         inventory = ServiceLocator.Instance.Get<IInventory>();
     }
 
-    public void OnFixedUpdate()
+    public override void OnFixedUpdate()
     {
         List<ItemStack> itemStacks = new();
 
         foreach (KeyValuePair<ItemData, GatherChance> gatherItem in gatherInfo.gatherItems)
         {
-            float randomPercentage = Random.Range(0.00001f, 100.0f);
+            float randomPercentage = Random.Range(0.0f, 100.0f);
 
             if (randomPercentage < gatherItem.Value.gatherChancePercentage)
             {
@@ -38,8 +38,6 @@ public class GatherManager : IUpdatable, IGatherManager
 
         inventory.Add(itemStacks.ToArray());
     }
-
-    public void OnUpdate() { }
 
     public void AddGatherComponent(GatherComponent _gatherComponent)
     {
