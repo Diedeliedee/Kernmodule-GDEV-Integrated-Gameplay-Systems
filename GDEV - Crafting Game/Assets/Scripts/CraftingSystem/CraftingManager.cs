@@ -8,9 +8,9 @@ public class CraftingManager : BaseUpdatable
     private IGatherManager gatherManager;
 
     private readonly List<CraftingRecipe> lockedRecipes;
+    private readonly List<UnlockedRecipeObject> unlockedRecipes;
 
     private readonly List<CraftingQueueObject> craftingQueue;
-    private readonly List<UnlockedRecipeObject> unlockedRecipes;
     private readonly Image craftingQueueProgressSlider;
 
     private readonly GameObject recipeUIPrefab;
@@ -66,7 +66,17 @@ public class CraftingManager : BaseUpdatable
         if (!CanBeCrafted(_recipe)) { return; }
 
         inventory.Remove(_recipe.Input);
-        craftingQueue.Add(new CraftingQueueObject(_recipe, craftingQueueUIParent, craftingQueueItemUIPrefab));
+        craftingQueue.Add(new CraftingQueueObject(_recipe, craftingQueueUIParent, craftingQueueItemUIPrefab, DequeueCraft));
+    }
+
+    public void DequeueCraft(CraftingQueueObject _craftingQueueObject)
+    {
+        if (craftingQueue.Contains(_craftingQueueObject))
+        {
+            _craftingQueueObject.Destroy();
+            craftingQueue.Remove(_craftingQueueObject);
+            craftingQueueProgressSlider.fillAmount = 1;
+        }
     }
 
     private bool CanBeCrafted(CraftingRecipe _recipe)

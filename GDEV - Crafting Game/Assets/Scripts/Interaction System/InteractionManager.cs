@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionManager : IService, IUpdatable
+public class InteractionManager : IInteractionManager, IUpdatable
 {
     private readonly Dictionary<int, IInteractable> subscribedElements = new();
 
@@ -51,6 +51,9 @@ public class InteractionManager : IService, IUpdatable
 
     public void Unsubscribe(RectTransform _key)
     {
+        if (subscribedElements[_key.GetInstanceID()] == clickedElement) { clickedElement = null; }
+        if (subscribedElements[_key.GetInstanceID()] == hoveringElement) { hoveringElement = null; }
+
         if (!subscribedElements.ContainsKey(_key.GetInstanceID()))
         {
             Debug.LogWarning($"Transform of {_key.gameObject.name} not subscribed in interaction registry.");
