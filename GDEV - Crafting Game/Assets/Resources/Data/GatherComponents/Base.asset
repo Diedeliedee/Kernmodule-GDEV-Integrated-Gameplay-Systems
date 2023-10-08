@@ -16,5 +16,5 @@ MonoBehaviour:
     pairs:
     - Key: {fileID: 11400000, guid: c111727f9ac1d564384eb62257d1a999, type: 2}
       Value:
-        gatherChancePercentage: 1
-        maxStackSize: 1
+        gatherChancePercentage: 2
+        maxStackSize: 2
