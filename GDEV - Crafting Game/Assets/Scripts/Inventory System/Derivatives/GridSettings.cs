@@ -5,7 +5,13 @@ public class GridSettings : ScriptableObject
 {
     [SerializeField] private Vector2Int resolution;
     [SerializeField] private float spacing;
+    [Space]
+    [SerializeField] private float updateSizeMultiplier;
+    [SerializeField] private float updateLerpSpeed;
 
     public Vector2Int Resolution => resolution;
     public float Spacing => spacing;
+
+    public float SizeMultiplier => updateSizeMultiplier;
+    public float LerpSpeed => updateLerpSpeed;
 }

@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
 
         inventoryManager = new InventoryManager(inventoryRoot);
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
+        tickManager.Add(inventoryManager);
 
         gatherManager = new GatherManager(baseGatherComponent);
         serviceLocator.Add(gatherManager, typeof(IGatherManager));
