@@ -13,6 +13,11 @@ public abstract class BaseInteractable : IInteractable
         ServiceLocator.Instance.Get<InteractionManager>().Subscribe(this, _element);
     }
 
+    public void DisconnectInteractable()
+    {
+        ServiceLocator.Instance.Get<InteractionManager>().Unsubscribe(element);
+    }
+
     public virtual void OnExit(Vector2 _mousePos) { }
 
     public virtual void OnEnter(Vector2 _mousePos) { }
