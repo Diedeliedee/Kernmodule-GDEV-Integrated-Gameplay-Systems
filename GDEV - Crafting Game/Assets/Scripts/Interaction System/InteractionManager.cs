@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionManager : IService, IUpdatable
+public class InteractionManager : IInteractionManager, IUpdatable
 {
     private readonly Dictionary<int, IInteractable> subscribedElements = new();
 

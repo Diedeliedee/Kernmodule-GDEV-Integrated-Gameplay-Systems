@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         serviceLocator.Add(tickManager, typeof(ITickManager));
 
         interactionManager = new InteractionManager();
-        serviceLocator.Add(interactionManager, typeof(InteractionManager));
+        serviceLocator.Add(interactionManager, typeof(IInteractionManager));
         tickManager.Add(interactionManager);
 
         inventoryManager = new InventoryManager(inventoryRoot);

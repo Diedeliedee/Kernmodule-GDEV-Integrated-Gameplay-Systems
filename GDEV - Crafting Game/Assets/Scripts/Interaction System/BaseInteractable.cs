@@ -10,12 +10,12 @@ public abstract class BaseInteractable : IInteractable
     public void Setup(RectTransform _element)
     {
         element = _element;
-        ServiceLocator.Instance.Get<InteractionManager>().Subscribe(this, _element);
+        ServiceLocator.Instance.Get<IInteractionManager>().Subscribe(this, _element);
     }
 
     public void DisconnectInteractable()
     {
-        ServiceLocator.Instance.Get<InteractionManager>().Unsubscribe(element);
+        ServiceLocator.Instance.Get<IInteractionManager>().Unsubscribe(element);
     }
 
     public virtual void OnExit(Vector2 _mousePos) { }
