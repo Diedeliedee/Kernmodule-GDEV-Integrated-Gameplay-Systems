@@ -3,11 +3,15 @@
 class GameManager
 {
   -serivceLocator : ServiceLocator
-  -inventoryManager : InventoryManager
   -tickManager : TickManager
+  -interactionManager : InteractionManager
+  -inventoryManager : InventoryManager
+  -gatherManager : GatherManager
+  -craftingManager : CraftingManager
   +Awake() : void
-  +Start() : void
   +Update() : void
+  +FixedUpdate() : void
+  +StartGame(startScreen : GameObject) : void
 }
 
 package "Service Locator"
