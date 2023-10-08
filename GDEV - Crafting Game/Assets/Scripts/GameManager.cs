@@ -34,6 +34,13 @@ public class GameManager : MonoBehaviour
 
     private bool isRunning = false;
 
+    public void StartGame(GameObject _startScreen)
+    {
+        _startScreen.SetActive(false);
+        isRunning = true;
+        tickManager.OnStart();
+    }
+
     private void Awake()
     {
         // Order is important : First ServiceLocator, Second TickManager and Third InteractionManager
@@ -63,6 +70,7 @@ public class GameManager : MonoBehaviour
         if (!isRunning) { return; }
         tickManager.OnUpdate();
 
+        // Cheat Code
         if (Input.GetKeyDown(KeyCode.F1))
         {
             inventoryManager.Inventory.Add(new ItemStack(winningItem, 1));
@@ -76,18 +84,16 @@ public class GameManager : MonoBehaviour
 
         if (inventoryManager.Inventory.Contains(new ItemStack(winningItem, 1)))
         {
-            isRunning = false;
-            endScreen.SetActive(true);
-            craftingUIObject.SetActive(false);
-            inventoryUIObject.SetActive(false);
-            winEffect.Play();
+            EndGame();
         }
     }
 
-    public void StartGame(GameObject startScreen)
+    private void EndGame()
     {
-        startScreen.SetActive(false);
-        isRunning = true;
-        tickManager.OnStart();
+        isRunning = false;
+        endScreen.SetActive(true);
+        craftingUIObject.SetActive(false);
+        inventoryUIObject.SetActive(false);
+        winEffect.Play();
     }
 }
