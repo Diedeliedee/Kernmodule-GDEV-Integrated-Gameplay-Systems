@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
         {
             isRunning = false;
             endScreen.SetActive(true);
+            winEffect.Play();
         }
     }
 
@@ -76,7 +77,6 @@ public class GameManager : MonoBehaviour
     {
         startScreen.SetActive(false);
         isRunning = true;
-        winEffect.Play();
         tickManager.OnStart();
     }
 }
