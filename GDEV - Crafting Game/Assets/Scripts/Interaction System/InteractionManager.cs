@@ -3,10 +3,17 @@ using UnityEngine;
 
 public class InteractionManager : IService, IUpdatable
 {
+    public readonly CanvasTranslator Translator = null;
+
     private readonly Dictionary<int, IInteractable> subscribedElements = new();
 
     private IInteractable clickedElement = null;
     private IInteractable hoveringElement = null;
+
+    public InteractionManager(Canvas _canvas)
+    {
+        Translator = new(_canvas);
+    }
 
     public void OnFixedUpdate() { }
 

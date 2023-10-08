@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image craftingQueueProgressBar;
     
     [Header("Reference")]
+    [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform inventoryRoot;
 
     private ServiceLocator serviceLocator = null;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
         tickManager = new TickManager();
         serviceLocator.Add(tickManager, typeof(ITickManager));
 
-        interactionManager = new InteractionManager();
+        interactionManager = new InteractionManager(canvas);
         serviceLocator.Add(interactionManager, typeof(InteractionManager));
         tickManager.Add(interactionManager);
 

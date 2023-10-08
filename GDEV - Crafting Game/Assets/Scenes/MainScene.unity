@@ -270,6 +270,7 @@ MonoBehaviour:
   craftingQueueUIParent: {fileID: 974523917}
   craftingSystemToolTip: {fileID: 1329813438}
   craftingQueueProgressBar: {fileID: 1055955570}
+  canvas: {fileID: 2095646189}
   inventoryRoot: {fileID: 1496940002}
 --- !u!4 &1130079491
 Transform:
@@ -402,6 +403,11 @@ Transform:
 --- !u!224 &1757691495 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2475716281667992503, guid: 8172387e0b1441a499704498f35c6504, type: 3}
+  m_PrefabInstance: {fileID: 6281223657189472237}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &2095646189 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6726228678580020943, guid: 8172387e0b1441a499704498f35c6504, type: 3}
   m_PrefabInstance: {fileID: 6281223657189472237}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6281223657189472237
