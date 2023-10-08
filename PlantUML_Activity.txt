@@ -1,102 +1,130 @@
 @startuml
+!theme bluegray
 
-title GatherSystem \n
+title Kernmodule GDEV: Integrated Gameplay Systems. Activity Diagram
+
+|Player|
+|User Interface|
+|Back-end|
 
 start
 
+|User Interface|
 :Show Start screen;
-if (User preses Start button) then (yes)
-  :Startgame;
+
+|Player|
+:User presses Start button;
+
+|Back-end|
+:Startgame;
   
-  while (does inventory contain winning item) is (no)
-    
-    :Gather Items;
-    :Create new list of ItemStacks;
-    while (All gatherItems checked?) is (no)
-      :Create new random value between 0 and 100;
-      if (random value smaller then gatherChance) then (yes)
-        :Create random integer between 0 and maxStackSize;
-        :Add new Itemstack to list of the current item in the random amount;
-      endif
-    endwhile (yes)
-    
-    :Add Items inventory;
-    while (All item stacks added?) is (no)
-      if (Tile with type already present?) then (yes)
-        :Add amount to existing tile;
-      else (no)
-        :Loop through grid, and fill empty tile;
-      endif
-    endwhile (yes)
-    
-    
-    while (All recipes checked?) is (no)
-      if (inventory contains items for recipe) then (yes)
-        :Remove currentRecipe from lockedRecipes;
-        :Create new UnlockedRecipeObject with the currentRecipe;
-      else (no)
-      endif
-    endwhile (yes)
-    
-    if (User hovers over recipe Object) then (yes)
-      :Enable the RecipeTooltip;
-      :Set Duration Text to the recipeDuration;
-      :Destroy all existing cost list items;
-      :Add new Costlistitem for all the required input items of the recipe;
-    else (no)
+repeat :FixedUpdate;
+
+  :Gather Items;
+  :Create new list of ItemStacks;
+  while (all gatherItems checked?) is (no)
+    :Create new random value between 0 and 100;
+    if (random value smaller then gatherChance) then (yes)
+      :Create random integer between 0 and maxStackSize;
+      :Add new Itemstack to list of the current item in the random amount;
     endif
+  endwhile (yes)
     
-    
-    if (User clicks on recipe object) then (yes)
-      
-      if (inventory contains all input items from recipe) then (yes)
-        :Remove input items from recipe from inventory;
-        :Add new CraftingQueueObject to the crafting queue using the recipe;
-      else (no)
-      endif
-      
+  :Add Items inventory;
+  while (all item stacks added?) is (no)
+    if (tile with type already present?) then (yes)
+      :Add amount to existing tile;
     else (no)
+      :Loop through grid, and fill empty tile;
     endif
+  endwhile (yes)
     
-    if (User clicks on CraftingQueueObject) then (yes)
-      if (craftingQueue contains CraftingQueueObject) then (yes)
-        :Disconnect CraftingQueueObject from the interaction System;
-        :Destroy the connectedGameObject;
-        :Add the recipe input items back to the inventory;
-        :Reset the crafting queue progress slider;
-      else (no)
-      endif
-    else (no)
-    endif
+  while (all recipes checked?) is (no)
     
-    if (crafting queue is not empty) then (yes)
-      :Get first element of the craftingQueue;
-      :Add Time.deltaTime to the passedTime variable;
-      :Set the crafting queue progress slider to the inverse lerp of the recipe duration to the passedTime;
-      if (passedTime is bigger then recipe duration) then (yes)
-        :Add recipe output items to the inventory;
-        :Disconnect CraftingQueueObject from the interaction System;
-        :Destroy the connectedGameObject;
-        :remove the CraftingQueueObject from the craftingQueue;
-        if (recipe contains non-null gatherComponent) then (yes)
-          :AddGatherComponent to the gatherComponentList;
-          :Clear the GatherInfo struct;
-          :loop through all the gatherComponents and Decorate the GatherInfo;
+    :Check if inventory contains items for recipe;
+    while (all types checked?) is (no)
+      :Loop through all tiles;
+      while (desired tile found?) is (no)
+        if (tile has sufficient amount?) then (yes)
+          if (tile is of same type?) then (yes)
+          else (no)
+          endif
         else (no)
         endif
+      endwhile(yes)
+    endwhile(yes)
+      
+    if (inventory contains items for recipe) then (yes)
+      :Remove currentRecipe from lockedRecipes;
+      :Create new UnlockedRecipeObject with the currentRecipe;
+    else (no)
+    endif
+  endwhile (yes)
+    
+|Player|
+  if (user hovers over recipe Object) then (yes)
+    
+|User Interface|
+    :Enable the RecipeTooltip;
+    :Set Duration Text to the recipeDuration;
+    :Destroy all existing cost list items;
+    :Add new Costlistitem for all the required input items of the recipe;
+  else (no)
+  endif
+    
+|Player|
+  if (user clicks on recipe object) then (yes)
+      
+|Back-end|
+    if (inventory contains all input items from recipe) then (yes)
+      :Remove input items from recipe from inventory;
+      :Add new CraftingQueueObject to the crafting queue using the recipe;
+    else (no)
+    endif
+        
+  else (no)
+  endif
+    
+|Player|
+  if (user clicks on CraftingQueueObject) then (yes)
+  
+|Back-end|
+    if (craftingQueue contains CraftingQueueObject) then (yes)
+      :Disconnect CraftingQueueObject from the interaction System;
+      :Destroy the connectedGameObject;
+      :Add the recipe input items back to the inventory;
+      :Reset the crafting queue progress slider;
+    else (no)
+    endif
+  else (no)
+  endif
+    
+  if (crafting queue is not empty) then (yes)
+    :Get first element of the craftingQueue;
+    :Add Time.deltaTime to the passedTime variable;
+    :Set the crafting queue progress slider to the inverse lerp of the recipe duration to the passedTime;
+    if (passedTime is bigger then recipe duration) then (yes)
+      :Add recipe output items to the inventory;
+      :Disconnect CraftingQueueObject from the interaction System;
+      :Destroy the connectedGameObject;
+      :remove the CraftingQueueObject from the craftingQueue;
+      if (recipe contains non-null gatherComponent) then (yes)
+        :AddGatherComponent to the gatherComponentList;
+        :Clear the GatherInfo struct;
+        :loop through all the gatherComponents and Decorate the GatherInfo;
       else (no)
       endif
     else (no)
     endif
+  else (no)
+  endif
   
-  endwhile (yes)
+repeat while (does inventory contain winning item) is (no) not (yes)
   
-  :Enable End Screen;
-  :Disable Crafting and Inventory UI;
-  :Play win effect;
-
-else (no)
-endif
+|User Interface|
+:Enable End Screen;
+:Disable Crafting and Inventory UI;
+:Play win effect;
 
 stop
 
