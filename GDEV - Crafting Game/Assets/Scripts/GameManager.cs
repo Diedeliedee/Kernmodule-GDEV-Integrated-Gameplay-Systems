@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
         if (!isRunning) { return; }
         tickManager.OnUpdate();
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             inventoryManager.Inventory.Add(new ItemStack(winningItem, 1));
         }
