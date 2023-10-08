@@ -14,9 +14,10 @@ package "Service Locator"
 {
   class ServiceLocator
   {
+    +Instance : ServiceLocator
     -services : Dictionary<Type, IService>
-    +Add(...) : void
-    +Remove(...) : void
+    +Add(service : IService, key : Type) : void
+    +Remove(key : Type) : void
     +Get<T>() : void
   }
   
