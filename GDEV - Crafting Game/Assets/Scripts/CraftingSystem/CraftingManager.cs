@@ -74,6 +74,7 @@ public class CraftingManager : BaseUpdatable
         if (craftingQueue.Contains(_craftingQueueObject))
         {
             _craftingQueueObject.Destroy();
+            inventory.Add(_craftingQueueObject.Recipe.Input);
             craftingQueue.Remove(_craftingQueueObject);
             craftingQueueProgressSlider.fillAmount = 1;
         }
