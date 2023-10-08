@@ -2,39 +2,34 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class SlotElement : BaseInteractable
+public class SlotElement
 {
     private readonly Tile connectedTile = null;
+    private readonly GridSettings settings = null;
+
+    private readonly ElementScaler imageScaler = null;
+    private readonly ElementScaler countScaler = null;
 
     private readonly Image itemImage = null;
     private readonly TextMeshProUGUI itemText = null;
 
-    public SlotElement(RectTransform _transform, Tile _connectedTile) : base(_transform)
+    public SlotElement(RectTransform _transform, Tile _connectedTile, GridSettings _settings)
     {
         connectedTile = _connectedTile;
+        settings = _settings;
 
-        itemImage = _transform.GetChild(0).GetComponent<Image>();
-        itemText = itemImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        imageScaler = new ElementScaler(_transform.GetChild(0).GetComponent<RectTransform>(), settings.PopLerpSpeed);
+        countScaler = new ElementScaler(imageScaler.Transform.GetChild(0).GetComponent<RectTransform>(), settings.PopLerpSpeed);
+
+        itemImage = imageScaler.Transform.GetComponent<Image>();
+        itemText = countScaler.Transform.GetComponent<TextMeshProUGUI>();
 
         connectedTile.OnAltered += OnTileAltered;
+        connectedTile.OnTypeChanged += OnTypeChanged;
+        connectedTile.OnValueChanged += OnValueChanged;
 
         itemImage.enabled = false;
         itemText.enabled = false;
-    }
-
-    public override void OnEnter(Vector2 _mousePos)
-    {
-        Debug.Log($"Je hebt {element.gameObject.name} benadert!!.");
-    }
-
-    public override void OnExit(Vector2 _mousePos)
-    {
-        Debug.Log($"Je hebt {element.gameObject.name} verlaten!!.");
-    }
-
-    public override void OnClick(Vector2 _mousePos)
-    {
-        Debug.Log($"Hallooo! Je hebt geklikt op {element.gameObject.name}.");
     }
 
     private void OnTileAltered(ItemStack _stack)
@@ -46,11 +41,26 @@ public class SlotElement : BaseInteractable
         }
         else
         {
-            itemImage.enabled = true;
-            itemText.enabled = true;
-
             itemImage.sprite = _stack.Item.Image;
             itemText.text = _stack.Amount.ToString();
+            itemImage.enabled = true;
+            itemText.enabled = true;
         }
+    }
+
+    private void OnTypeChanged(ItemData _type)
+    {
+        imageScaler.Scale(settings.PopSizeMultiplier);
+    }
+
+    private void OnValueChanged(int _amount)
+    {
+        countScaler.Scale(settings.PopSizeMultiplier);
+    }
+
+    public void Tick(float _deltaTime)
+    {
+        imageScaler.Tick(_deltaTime);
+        countScaler.Tick(_deltaTime);
     }
 }

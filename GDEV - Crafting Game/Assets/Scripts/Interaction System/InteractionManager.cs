@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class InteractionManager : IInteractionManager, IUpdatable
 {
+    private readonly CanvasTranslator translator = null;
     private readonly Dictionary<int, IInteractable> subscribedElements = new();
 
     private IInteractable clickedElement = null;
     private IInteractable hoveringElement = null;
+
+    public InteractionManager(Canvas _canvas)
+    {
+        translator = new(_canvas);
+    }
 
     public void OnFixedUpdate() { }
 
@@ -61,6 +67,10 @@ public class InteractionManager : IInteractionManager, IUpdatable
         }
         subscribedElements.Remove(_key.GetInstanceID());
     }
+
+    public Vector2 CanvasToScreenPoint(Vector2 _point) => translator.CanvasToScreenPoint(_point);
+
+    public Vector2 ScreenToCanvasPoint(Vector2 _point) => translator.ScreenToCanvasPoint(_point);
 
     private bool OverlapsWithElement(Vector2 _mousePos, out IInteractable _interactable)
     {

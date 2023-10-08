@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resolution: {x: 6, y: 6}
   spacing: 10
+  updateSizeMultiplier: 1.25
+  updateLerpSpeed: 0.1

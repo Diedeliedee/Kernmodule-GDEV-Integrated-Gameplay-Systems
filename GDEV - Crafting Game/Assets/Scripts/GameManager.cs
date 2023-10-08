@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform inventoryRoot;
     
     [Header("References")]
+    [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject endScreen;
     [SerializeField] private ItemData winningItem;
 
@@ -37,12 +38,13 @@ public class GameManager : MonoBehaviour
         tickManager = new TickManager();
         serviceLocator.Add(tickManager, typeof(ITickManager));
 
-        interactionManager = new InteractionManager();
+        interactionManager = new InteractionManager(canvas);
         serviceLocator.Add(interactionManager, typeof(IInteractionManager));
         tickManager.Add(interactionManager);
 
         inventoryManager = new InventoryManager(inventoryRoot);
         serviceLocator.Add(inventoryManager.Inventory, typeof(IInventory));
+        tickManager.Add(inventoryManager);
 
         gatherManager = new GatherManager(baseGatherComponent);
         serviceLocator.Add(gatherManager, typeof(IGatherManager));
