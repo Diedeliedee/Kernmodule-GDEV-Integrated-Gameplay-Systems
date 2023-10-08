@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class SlotElement : BaseInteractable
+public class SlotElement
 {
     private readonly Tile connectedTile = null;
     private readonly GridSettings settings = null;
@@ -13,13 +13,13 @@ public class SlotElement : BaseInteractable
     private readonly Image itemImage = null;
     private readonly TextMeshProUGUI itemText = null;
 
-    public SlotElement(RectTransform _transform, Tile _connectedTile, GridSettings _settings) : base(_transform)
+    public SlotElement(RectTransform _transform, Tile _connectedTile, GridSettings _settings)
     {
         connectedTile = _connectedTile;
         settings = _settings;
 
-        imageScaler = new ElementScaler(_transform.GetChild(0).GetComponent<RectTransform>(), settings.LerpSpeed);
-        countScaler = new ElementScaler(imageScaler.Transform.GetChild(0).GetComponent<RectTransform>(), settings.LerpSpeed);
+        imageScaler = new ElementScaler(_transform.GetChild(0).GetComponent<RectTransform>(), settings.PopLerpSpeed);
+        countScaler = new ElementScaler(imageScaler.Transform.GetChild(0).GetComponent<RectTransform>(), settings.PopLerpSpeed);
 
         itemImage = imageScaler.Transform.GetComponent<Image>();
         itemText = countScaler.Transform.GetComponent<TextMeshProUGUI>();
@@ -50,12 +50,12 @@ public class SlotElement : BaseInteractable
 
     private void OnTypeChanged(ItemData _type)
     {
-        imageScaler.Scale(settings.SizeMultiplier);
+        imageScaler.Scale(settings.PopSizeMultiplier);
     }
 
     private void OnValueChanged(int _amount)
     {
-        countScaler.Scale(settings.SizeMultiplier);
+        countScaler.Scale(settings.PopSizeMultiplier);
     }
 
     public void Tick(float _deltaTime)

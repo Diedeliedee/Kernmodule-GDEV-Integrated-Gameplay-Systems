@@ -12,6 +12,6 @@ public class GridSettings : ScriptableObject
     public Vector2Int Resolution => resolution;
     public float Spacing => spacing;
 
-    public float SizeMultiplier => updateSizeMultiplier;
-    public float LerpSpeed => updateLerpSpeed;
+    public float PopSizeMultiplier => updateSizeMultiplier;
+    public float PopLerpSpeed => updateLerpSpeed;
 }

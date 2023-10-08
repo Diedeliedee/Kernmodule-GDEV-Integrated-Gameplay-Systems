@@ -95,11 +95,47 @@ package "Inventory System"
 {
   class InventoryManager
   {
-    -root : RectTransform
     -settings : GridSettings
     -inventory : GridInventory
+    -root : RectTransform
     -elementGrid : SlotElement[,]
     -InstantiateGrid(_gridRes : Vector2Int, _gridSize : Vector2Int, tiles : Tile[,])
+  }
+  
+  interface IInventory
+  {
+    +Add(itemStack : params ItemStack[]) : void
+    +Remove(itemStack : params ItemStack[]) : void
+    +Contains(itemStack : params ItemStack[]) : bool
+  }
+  
+  class ItemData
+  {
+    +Image : Sprite
+    +ItemName : string
+  }
+  
+  struct ItemStack
+  {
+    +Type : ItemData
+    +Amount : int
+  }
+  
+  class GridInventory <<Service>> implements IInventory
+  {
+    -itemGrid : Tile[]
+  }
+  
+  class Tile
+  {
+    +OnAltered : event Action<ItemStack>
+    +OnValueChanged : event Action<int>
+    +OnTypeChanged : event Action<ItemData>
+    -contents : ItemStack
+    +SetContents() : void
+    +ChangeValue(amount : int) : void
+    +CompareType(type : ItemData) : bool
+    +Contains(amount : int) : bool
   }
   
   class SlotElement
@@ -110,64 +146,54 @@ package "Inventory System"
     -OnTileAltered() : void
   }
   
+  class ElementScaler
+  {
+    -Transform : RectTransform
+    -Recovery : float
+    +Scale(scale : float) void
+    +Tick(deltaTime : float) : void
+  }
+
   class GridSettings <<ScriptableObject>>
   {
     +Resolution : Vector2Int
-  }
-
-  class GridInventory <<Service>> implements IInventory
-  {
-    -itemGrid : Tile[]
-  }
-  
-  class Tile
-  {
-    +OnAltered : event Action<ItemStack>
-    -contents : ItemStack
-    +SetContents() : void
-    +ChangeValue(amount : int) : void
-  }
-
-  interface IInventory
-  {
-    +Add(itemStack : params ItemStack[]) : void
-    +Remove(itemStack : params ItemStack[]) : void
-    +Contains(itemStack : params ItemStack[]) : bool
-  }
-  
-  struct ItemStack
-  {
-    +Type : ItemData
-    +Amount : int
-  }
-  
-  class ItemData
-  {
-    +Image : Sprite
+    +Spacing : float
+    +PopSizeMultiplier : float
+    +PopLerpSpeed : float
   }
   
   GameManager *-- InventoryManager
   InventoryManager o-- GridSettings
   InventoryManager *-- SlotElement
+  Tile *-- ItemStack
+  ItemStack *-- ItemData
   GridInventory *-- Tile
   SlotElement *-- Tile
-  IInventory --> ItemStack
-  ItemStack *-- ItemData
+  SlotElement *-- ElementScaler
 }
 
-package "Interaction System" <<cut>>
+package "Interaction System"
 {
-  class InteractionManager <<Service, Updatable>>
+  interface IInteractionManager <<Service>>
   {
-    -subscribedElements : Dictionary<RectTransform, IInteractable>
-    -selectedElement : RectTransform
-    +Subscribe(element : IInteractable, key : RectTransform)
+    +Subscribe(element : IInteractable, key : RectTransform) : void
+    +Unsubscribe(key : RectTransform) : void
+    +CanvasToScreenPoint(point : Vector2) : Vector2
+    +ScreenToCanvasPoint(point : Vector2) : Vector2
   }
 
   interface IInteractable
   {
     +OnClick(mousePos : Vector2) : void
     +OnRelease(mousePos : Vector2) : void
+  }
+
+  class InteractionManager <<Updatable>> implements IInteractionManager
+  {
+    -translator : CanvasTranslator
+    -subscribedElements : Dictionary<RectTransform, IInteractable>
+    -clickedElement : IInteractable
+    -hoveringElement : IInteractable
   }
   
   abstract class BaseInteractable implements IInteractable
@@ -176,6 +202,13 @@ package "Interaction System" <<cut>>
     +BaseInteractable()
   }
   
+  class CanvasTranslator
+  {
+    +CanvasToScreenPoint(point : Vector2) : Vector2
+    +ScreenToCanvasPoint(point : Vector2) : Vector2
+  }
+  
+  InteractionManager *-- CanvasTranslator
   InteractionManager o.. IInteractable
 }
 

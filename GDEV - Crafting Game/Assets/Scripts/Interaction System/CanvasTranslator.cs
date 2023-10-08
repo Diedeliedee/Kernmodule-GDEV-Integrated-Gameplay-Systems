@@ -5,8 +5,6 @@ public class CanvasTranslator
 {
     private readonly CanvasScaler scaler = null;
 
-    public Vector2 ReferenceResolution => scaler.referenceResolution;
-
     public CanvasTranslator(Canvas _canvas)
     {
         scaler = _canvas.GetComponent<CanvasScaler>();
