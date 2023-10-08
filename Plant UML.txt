@@ -27,7 +27,7 @@ package "Service Locator"
   
   interface IService
   
-  GameManager *-- ServiceLocator
+  GameManager::serivceLocator *-- ServiceLocator
   ServiceLocator o.. IService
 }
 
@@ -56,7 +56,7 @@ package "Tick System"
   
   abstract class BaseInteractable
   
-  GameManager *-- ITickManager
+  GameManager::tickManager *-- ITickManager
   TickManager o.. IUpdatable
   IUpdatable <-- BaseInteractable
 }
@@ -93,7 +93,7 @@ package "Gathering System"
     +maxStackSize : int
   }
   
-  GameManager *-- IGatherManager
+  GameManager::gatherManager *-- IGatherManager
   GatherManager *-- GatherInfo
   GatherManager *-- GatherComponent
   GatherInfo o-- GatherChance
@@ -156,7 +156,7 @@ package "Crafting System"
     +SetRecipe(recipe : CraftingRecipe) : void
   }
   
-  GameManager *-- CraftingManager
+  GameManager::craftingManager *-- CraftingManager
   CraftingManager o-- CraftingRecipe
   CraftingManager *-- UnlockedRecipeObject
   CraftingManager *-- CraftingQueueObject
@@ -235,7 +235,7 @@ package "Inventory System"
     +PopLerpSpeed : float
   }
   
-  GameManager *-- InventoryManager
+  GameManager::inventoryManager *-- InventoryManager
   InventoryManager o-- GridSettings
   InventoryManager *-- SlotElement
   Tile *-- ItemStack
@@ -286,7 +286,7 @@ package "Interaction System"
     +ScreenToCanvasPoint(point : Vector2) : Vector2
   }
   
-  GameManager *-- IInteractionManager
+  GameManager::interactionManager *-- IInteractionManager
   InteractionManager *-- CanvasTranslator
   InteractionManager o.. IInteractable
 }
