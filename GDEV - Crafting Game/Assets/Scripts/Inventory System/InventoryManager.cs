@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryManager
+public class InventoryManager : IUpdatable
 {
     //  Core:
     private readonly GridSettings settings = null;
@@ -29,6 +29,21 @@ public class InventoryManager
         elementGrid = InstantiateGrid(inventory.Items);
     }
 
+    public void OnUpdate()
+    {
+        for (int x = 0; x < elementGrid.GetLength(0); x++)
+        {
+            for (int y = 0; y < elementGrid.GetLength(1); y++)
+            {
+                elementGrid[x, y].Tick(Time.deltaTime);
+            }
+        }
+    }
+
+    public void OnStart() { }
+
+    public void OnFixedUpdate() { }
+
     private SlotElement[,] InstantiateGrid(Tile[,] tiles)
     {
         var grid = new SlotElement[settings.Resolution.x, settings.Resolution.y];
@@ -47,7 +62,7 @@ public class InventoryManager
                 var transform = createdSlot.GetComponent<RectTransform>();
 
                 createdSlot.name = $"Grid Slot ({x}, {y})";
-                grid[x, y] = new SlotElement(transform, tiles[x, y]);
+                grid[x, y] = new SlotElement(transform, tiles[x, y], settings);
             }
         }
         return grid;

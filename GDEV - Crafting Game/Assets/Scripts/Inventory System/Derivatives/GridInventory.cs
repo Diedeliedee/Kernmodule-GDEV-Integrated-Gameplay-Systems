@@ -22,6 +22,8 @@ public class GridInventory : IInventory
         //  Iterate through every item stack.
         foreach (var itemStack in _itemStacks)
         {
+            var incrementableTile = FindByType(itemStack.Item);
+
             //  Iterate through every slot.
             bool OnIterate(int _x, int _y)
             {
@@ -44,7 +46,16 @@ public class GridInventory : IInventory
                 }
             }
 
-            Loop(OnIterate);
+            //  If a tile has been found harboring the same type as the item stack, just add it to that tile.
+            if (incrementableTile != null)
+            {
+                incrementableTile.ChangeValue(itemStack.Amount);
+            }
+            //  Otherwise, find an empty tile and place the item stack in there.
+            else
+            {
+                Loop(OnIterate);
+            }
         }
     }
 
@@ -120,6 +131,22 @@ public class GridInventory : IInventory
 
         selectedTile.SetContents(_stack);
         Add(cachedContents);
+    }
+
+    /// <returns>The first found tile containing the given type. Null if no tile with that type has been found.</returns>
+    private Tile FindByType(ItemData _type)
+    {
+        Tile foundTile = null;
+
+        bool OnIterate(int _x, int _y)
+        {
+            if (!Items[_x, _y].CompareType(_type)) return false;
+            foundTile = Items[_x, _y];
+            return true;
+        }
+
+        Loop(OnIterate);
+        return foundTile;
     }
 
     /// <summary>

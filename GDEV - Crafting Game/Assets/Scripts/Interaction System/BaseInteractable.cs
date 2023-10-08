@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class BaseInteractable : IInteractable
 {
+    protected IInteractionManager interactionManager = null;
     protected RectTransform element = null;
 
     public BaseInteractable() { }
@@ -9,13 +10,15 @@ public abstract class BaseInteractable : IInteractable
 
     public void Setup(RectTransform _element)
     {
+        interactionManager = ServiceLocator.Instance.Get<IInteractionManager>();
         element = _element;
-        ServiceLocator.Instance.Get<IInteractionManager>().Subscribe(this, _element);
+
+        interactionManager.Subscribe(this, _element);
     }
 
     public void DisconnectInteractable()
     {
-        ServiceLocator.Instance.Get<IInteractionManager>().Unsubscribe(element);
+        interactionManager.Unsubscribe(element);
     }
 
     public virtual void OnExit(Vector2 _mousePos) { }
@@ -33,7 +36,7 @@ public abstract class BaseInteractable : IInteractable
     public bool Overlaps(Vector2 _mousePos)
     {
         var pos = element.position;
-        var size = element.sizeDelta;
+        var size = interactionManager.CanvasToScreenPoint(element.sizeDelta);
 
         var overlapX = _mousePos.x >= pos.x - (size.x / 2) && _mousePos.x <= pos.x + (size.x / 2);
         var overlapY = _mousePos.y >= pos.y - (size.y / 2) && _mousePos.y <= pos.y + (size.y / 2);
